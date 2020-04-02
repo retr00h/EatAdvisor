@@ -1,10 +1,10 @@
 package EatAdvisor.clienti;
-
+import EatAdvisor.EatAdvisor;
 import EatAdvisor.ristoratori.Ristoratori;
 
 import java.io.*;
 import java.util.Scanner;
-import java.security.MessageDigest;
+import java.util.Stack;
 
 public class Clienti implements Serializable {
 
@@ -27,23 +27,78 @@ public class Clienti implements Serializable {
     }
 
     private void registraCliente() {
-        String filename = "data/utenti.dati";
-        try {
-            FileOutputStream f = new FileOutputStream(filename);
-            ObjectOutputStream out = new ObjectOutputStream(f);
 
-            // serializzazione oggetto nel file EatAdvisor.dati
-            out.writeObject(this);
+        String filename = "data/Utenti.dati";
+        File f = new File(filename);
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura stack utenti da utenti.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
 
-            out.close();
-            f.close();
+                Stack<Clienti> utenti = (Stack<Clienti>) in.readObject();
 
-            System.out.println("Dati inseriti con successo!\n");
+                in.close();
+                fileInput.close();
 
+                // stack utenti deserializzata
+                utenti.push(this);
+
+                FileOutputStream fileOutput = new FileOutputStream(filename);
+                ObjectOutputStream out = new ObjectOutputStream(fileOutput);
+
+                // serializzazione oggetto nel file utenti.dati
+                out.writeObject(utenti);
+
+                out.close();
+                fileOutput.close();
+
+                System.out.println("Dati inseriti con successo!\n");
+
+            } catch(Exception e) {
+                System.out.println("Dati non inseriti");
+            }
+        } else {
+            try {
+                Stack<Clienti> utenti = new Stack<Clienti>();
+                utenti.push(this);
+
+                FileOutputStream fileOutput = new FileOutputStream(filename);
+                ObjectOutputStream out = new ObjectOutputStream(fileOutput);
+
+                // serializzazione oggetto nel file EatAdvisor.dati
+                out.writeObject(utenti);
+
+                out.close();
+                fileOutput.close();
+
+                System.out.println("Dati inseriti con successo!\n");
+
+            } catch(Exception e) {
+                System.out.println("Dati non inseriti");
+            }
         }
-        catch(IOException e) {
-            System.out.println("Dati non inseriti");
-        }
+
+
+
+
+//        String filename = "data/utenti.dati";
+//        try {
+//            FileOutputStream f = new FileOutputStream(filename);
+//            ObjectOutputStream out = new ObjectOutputStream(f);
+//
+//            // serializzazione oggetto nel file EatAdvisor.dati
+//            out.writeObject(this);
+//
+//            out.close();
+//            f.close();
+//
+//            System.out.println("Dati inseriti con successo!\n");
+//
+//        }
+//        catch(IOException e) {
+//            System.out.println("Dati non inseriti");
+//        }
     }
 
     /*TODO:
@@ -85,21 +140,7 @@ public class Clienti implements Serializable {
                 "Per uscire, inserisci 0.\n");
 
         Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        boolean valid = false;
-        String s = input.nextLine();
-        int n = -1;
-        if (s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3")) {
-            n = Integer.parseInt(s);
-        } else {
-            while (!valid) {
-                System.out.println("\nRiprovare.\n");
-                s = input.nextLine();
-                if (s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3")) {
-                    n = Integer.parseInt(s);
-                    valid = true;
-                }
-            }
-        }
+        int n = Integer.parseInt(EatAdvisor.input(input, 1));
 
         switch (n) {
             case 0: break;
@@ -121,125 +162,21 @@ public class Clienti implements Serializable {
                 while (!finish) {
                     System.out.println("\nHai scelto di registrarti.");
                     System.out.println("Inserisci il tuo nome: ");
-
-                    valid = false;
-                    s = input.nextLine();
-                    if (s.matches("^[A-Za-z\\s]+[A-Za-z\\s]*$")) {
-                        nome = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine();
-                            if (s.matches("^[A-Za-z\\s]+[A-Za-z\\s]*$")) {
-                                nome = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    nome = EatAdvisor.input(input, 2);
                     System.out.println("\nOk!\nInserisci il tuo cognome: ");
-
-                    valid = false;
-                    s = input.nextLine();
-                    if (s.matches("^[A-Za-z\\s]+[A-Za-z\\s]*$")) {
-                        cognome = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine();
-                            if (s.matches("^[A-Za-z\\s]+[A-Za-z\\s]*$")) {
-                                cognome = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    cognome = EatAdvisor.input(input, 12);
                     System.out.println("\nOk!\nInserisci il tuo comune di residenza (Varese, Milano, Roma, ...): ");
-
-                    valid = false;
-                    s = input.nextLine().toLowerCase();
-                    if (s.matches("^[a-z'\\s]{1,50}$")) {
-                        comune = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine().toLowerCase();
-                            if (s.matches("^[a-z'\\s]{1,50}$")) {
-                                comune = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    comune = EatAdvisor.input(input, 6);
                     System.out.println("\nOk!\nInserisci la sigla della provincia in cui risiedi (VA, MI, RM, ...): ");
-
-                    valid = false;
-                    s = input.nextLine().toUpperCase();
-                    if (s.matches("^[A-Z]{2}$")) {
-                        provincia = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine().toUpperCase();
-                            if (s.matches("^[A-Z]{2}$")) {
-                                provincia = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    provincia = EatAdvisor.input(input, 7);
                     System.out.println("\nOk!\nInserisci il tuo indirizzo email: ");
-
-                    valid = false;
-                    s = input.nextLine().replace(" ", "");
-                    if (s.matches("^[a-zA-Z0-9_.-]{1,64}@[a-zA-Z0-9.-]{1,}\\.[a-zA-Z]{2,3}$")) {
-                        email = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine().replace(" ", "");
-                            if (s.matches("^[a-zA-Z0-9_.-]{1,64}@[a-zA-Z0-9.-]{1,}\\.[a-zA-Z]{2,3}$")) {
-                                email = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    email = EatAdvisor.input(input, 13);
                     System.out.println("\nOk!\nInserisci il tuo nickname: ");
-
-                    valid = false;
-                    s = input.nextLine();
-                    if (s.matches("^[A-Za-z0-9_.\\-]{1,64}$")) {
-                        nickname = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare. Per un elenco completo dei formati disponibili, " +
-                                    "consultare il manuale a pagina XXX.\n\n");
-                            s = input.nextLine();
-                            if (s.matches("^[A-Za-z0-9_.\\-]{1,64}$")) {
-                                nickname = s;
-                                valid = true;
-                            }
-                        }
-                    }
-
+                    nickname = EatAdvisor.input(input, 14);
                     System.out.println("\nOk!\nInserisci la tua password (almeno 8 caratteri, 1 lettera maiuscola, " +
                             "1 lettera minuscola e 1 numero): ");
+                    password = EatAdvisor.input(input, 15);
 
-                    valid = false;
-                    s = input.nextLine();
-                    if (s.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})")) {
-                        password = s;
-                    } else {
-                        while (!valid) {
-                            System.out.println("\nRiprovare.\n");
-                            s = input.nextLine();
-                            if (s.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})")) {
-                                password = s;
-                                valid = true;
-                            }
-                        }
-                    }
                     System.out.println("\nDati inseriti:");
                     System.out.println("Nome: " + nome + "\nCognome: " + cognome + "\nComune: " + comune + "\nProvincia: " +
                             provincia + "\nEmail: " + email + "\nNickname: " + nickname + "\nPassword: " + password + "\n");
@@ -249,7 +186,6 @@ public class Clienti implements Serializable {
                 }
 
                 c = new Clienti(nome, cognome, comune, provincia, email, nickname, password);
-
                 c.registraCliente();
                 break;
 
