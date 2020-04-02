@@ -1,6 +1,9 @@
-package ristoratori;
+package EatAdvisor.ristoratori;
+import EatAdvisor.Giudizio;
+
 import java.io.*;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Ristoratori implements java.io.Serializable {
 
@@ -14,6 +17,7 @@ public class Ristoratori implements java.io.Serializable {
     private String telefono;
     private String url;
     private String tipologia;
+    private Stack<Giudizio> giudizi = null;
 
     public Ristoratori (String nome, String tipoIndirizzo, String nomeIndirizzo, String civico, String comune,
                        String provincia, String cap, String telefono, String url, String tipologia) {
@@ -43,11 +47,11 @@ public class Ristoratori implements java.io.Serializable {
             out.close();
             f.close();
 
-            System.out.println("Il ristorante e' stato inserito\n");
+            System.out.println("Dati inseriti con successo!\n");
 
         }
         catch(IOException e) {
-            System.out.println("Il ristorante non e' stato inserito con successo!");
+            System.out.println("Dati non inseriti");
         }
 
     }
@@ -74,9 +78,7 @@ public class Ristoratori implements java.io.Serializable {
         }
 
         switch (n) {
-            case 0:
-
-                break;
+            case 0: break;
             case 1:
                 boolean finish = false;
                 String nome = "";
@@ -174,13 +176,13 @@ public class Ristoratori implements java.io.Serializable {
                             System.out.println("\nRiprovare.\n");
                             s = input.nextLine().toLowerCase();
                             if (s.matches("^[a-z'\\s]{1,50}$")) {
-                                civico = s;
+                                comune = s;
                                 valid = true;
                             }
                         }
                     }
 
-                    System.out.println("\nOk!\nInserire la sigla della provincia in cui si trova" +
+                    System.out.println("\nOk!\nInserire la sigla della provincia in cui si trova " +
                             "il comune del ristorante (VA, MI, RM, ...): ");
 
                     valid = false;
@@ -244,6 +246,7 @@ public class Ristoratori implements java.io.Serializable {
                         while (!valid) {
                             System.out.println("\nRiprovare. Per un elenco completo dei formati disponibili, " +
                                     "consultare il manuale a pagina XXX.\n\n");
+                            s = input.nextLine();
                             if (s.matches("^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$")) {
                                 url = s;
                                 valid = true;
@@ -260,6 +263,7 @@ public class Ristoratori implements java.io.Serializable {
                     } else {
                         while (!valid) {
                             System.out.println("\nRiprovare.\n");
+                            s = input.nextLine();
                             if (s.matches("^(italiano|Italiano|etnico|Etnico|fusion|Fusion)$")) {
                                 tipologia = s;
                                 valid = true;
