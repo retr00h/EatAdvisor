@@ -1,10 +1,8 @@
 package EatAdvisor.ristoratori;
 import EatAdvisor.EatAdvisor;
 import EatAdvisor.Giudizio;
-import EatAdvisor.clienti.Clienti;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -210,9 +208,5 @@ public class Ristoratori implements java.io.Serializable {
                 r.registraRistorante();
                 break;
         }
-
-
-//        Ristoratori ris = new Ristoratori("Pino pasticcino", "via", "flora", 146, "legnano", "mi", 20025, "3398335721", "www.google.com", "italiano");
-//        ris.registraRistorante();
     }
 }

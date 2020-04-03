@@ -483,6 +483,20 @@ public class EatAdvisor {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
+    public static void visualizzaGiudizi(Ristoratori r) {
+        System.out.print("Giudizi: ");
+        if (r.getGiudizi() != null) {
+            for (Giudizio g : r.getGiudizi()) {
+                System.out.println("\nAutore: " + g.getAutore());
+                System.out.println("Voto: " + g.getVoto());
+                if (g.getCommento() != null) System.out.println("Commento: " + g.getCommento() + "\n");
+                System.out.println();
+            }
+        } else {
+            System.out.println("nessuno, per ora...\n");
+        }
+    }
+
 
     public static void visualizzaRistorante(Ristoratori[] ristoratori) {
         if (ristoratori != null) {
@@ -494,17 +508,6 @@ public class EatAdvisor {
                 System.out.println("Telefono: " + r.getTelefono());
                 System.out.println("Sito web: " + r.getUrl());
                 System.out.println("Tipologia: " + capitalize(r.getTipologia()));
-                System.out.print("Giudizi: ");
-                if (r.getGiudizi() != null) {
-                    for (Giudizio g : r.getGiudizi()) {
-                        System.out.println("\nAutore: " + g.getAutore());
-                        System.out.println("Voto: " + g.getVoto());
-                        if (g.getCommento() != null) System.out.println("Commento: " + g.getCommento() + "\n");
-                        System.out.println();
-                    }
-                } else {
-                    System.out.println("nessuno, per ora...\n");
-                }
             }
         }
     }
