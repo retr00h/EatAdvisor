@@ -1,7 +1,10 @@
 package EatAdvisor.ristoratori;
 import EatAdvisor.EatAdvisor;
 import EatAdvisor.Giudizio;
+import EatAdvisor.clienti.Clienti;
+
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -34,22 +37,81 @@ public class Ristoratori implements java.io.Serializable {
         this.tipologia = tipologia;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public String getTipoIndirizzo() {
+        return tipoIndirizzo;
+    }
+
+    public String getNomeIndirizzo() {
+        return nomeIndirizzo;
+    }
+
+    public String getCivico() {
+        return civico;
+    }
+
+    public String getComune() {
+        return comune;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public String getCap() {
+        return cap;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getTipologia() {
+        return tipologia;
+    }
+
+    public Stack<Giudizio> getGiudizi() {
+        return giudizi;
+    }
+
     private void registraRistorante () {
         String filename = "data/EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura stack ristoratori da EatAdvisor.dati
+                // lettura array ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
 
-                Stack<Ristoratori> ristoratori = (Stack<Ristoratori>) in.readObject();
+                Ristoratori[] ristoratoriTemp = (Ristoratori[]) in.readObject();
 
                 in.close();
                 fileInput.close();
 
-                // stack ristoratori deserializzata
-                ristoratori.push(this);
+                Ristoratori[] ristoratori = new Ristoratori[ristoratoriTemp.length+1];
+
+                for (int i = 0; i < ristoratoriTemp.length; i++) {
+                    if (ristoratoriTemp[i].nome.equals(this.nome) && ristoratoriTemp[i].tipoIndirizzo.equals(this.tipoIndirizzo) &&
+                            ristoratoriTemp[i].nomeIndirizzo.equals(this.nomeIndirizzo) &&
+                            ristoratoriTemp[i].civico.equals(this.civico) && ristoratoriTemp[i].comune.equals(this.comune)) {
+                        System.out.println("E' gia' presente un ristorante con questo nome a questo indirizzo.\n");
+                        throw new Exception();
+                    } else {
+                        ristoratori[i] = ristoratoriTemp[i];
+                    }
+                }
+
+                // array ristoratori deserializzato
+
+                ristoratori[ristoratori.length-1] = this;
+                EatAdvisor.sortRistorantiNome(ristoratori);
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
@@ -62,13 +124,13 @@ public class Ristoratori implements java.io.Serializable {
 
                 System.out.println("Dati inseriti con successo!\n");
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println("Dati non inseriti");
             }
         } else {
             try {
-                Stack<Ristoratori> ristoratori = new Stack<Ristoratori>();
-                ristoratori.push(this);
+                Ristoratori[] ristoratori = new Ristoratori[1];
+                ristoratori[0] = this;
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
@@ -81,7 +143,7 @@ public class Ristoratori implements java.io.Serializable {
 
                 System.out.println("Dati inseriti con successo!\n");
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println("Dati non inseriti");
             }
         }

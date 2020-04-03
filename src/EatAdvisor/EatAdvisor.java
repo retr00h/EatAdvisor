@@ -1,8 +1,22 @@
 package EatAdvisor;
+import EatAdvisor.ristoratori.Ristoratori;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.util.Scanner;
 
 public class EatAdvisor {
 
+    /**
+     * Per op 0, 1 e 16 controlla direttamente se s e' valida.
+     * Per tutti gli altri op ammessi confronta s con una regex e ne ritorna il risultato boolean.
+     * Per gli op non ammessi ritorna false.
+     *
+     * @param  s  stringa da validare
+     * @param  op tipo di stringa
+     * @return      valore boolean che rappresenta la validita' della stringa s
+     */
     private static boolean validate(String s, int op) {
         /*
             selezioneRistorante 0
@@ -22,6 +36,8 @@ public class EatAdvisor {
             email               13
             nickname            14
             password            15
+
+            selezioneRicerca    16
          */
         String regexNome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexTipoIndirizzo = "^(via|viale|corso|piazza|piazzale|largo|lungolago|lungomare|rotonda|vicolo|vicoletto)$";
@@ -57,11 +73,21 @@ public class EatAdvisor {
             case 13: return s.matches(regexEmail);
             case 14: return s.matches(regexNickname);
             case 15: return s.matches(regexPassword);
+            case 16: return s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3") || s.equals("4");
             default: return false;
         }
     }
 
-
+    /**
+     * Legge s da input, fa un primo confronto utilizzando EatAdvisor.validate(String s, int op).
+     * Se tale confronto da' esito positivo, ritorna s.
+     * Altrimenti itera finche' EatAdvisor.validate(String s, int op) risulta false.
+     * Per alcuni op viene modificata la stringa in input tramite String.toLowerCase() o String.toUpperCase().
+     *
+     * @param  input  stringa da validare
+     * @param  op tipo di stringa
+     * @return      stringa inserita in input
+     */
     public static String input(Scanner input, int op) {
         String s;
         switch (op) {
@@ -277,10 +303,210 @@ public class EatAdvisor {
                         }
                     }
                 }
+            case 16:
+                s = input.nextLine();
+                if (validate(s, 16)) {
+                    return s;
+                } else {
+                    while (true) {
+                        System.out.println("\nRiprovare.\n");
+                        s = input.nextLine();
+                        if (validate(s, 16)) {
+                            return s;
+                        }
+                    }
+                }
             default: return null;
         }
     }
 
+    /**
+     * Metodo statico che ordina ristoratori tramite bubble sort
+     *
+     * @param  ristoratori  array da ordinare
+     */
+    public static void sortRistorantiNome(Ristoratori[] ristoratori) {
+        int n = ristoratori.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = n-1; j > i; j--) {
+                if (ristoratori[j].getNome().compareToIgnoreCase(ristoratori[j-1].getNome()) < 0) {
+                    Ristoratori temp = ristoratori[j];
+                    ristoratori[j] = ristoratori[j-1];
+                    ristoratori[j-1] = temp;
+                }
+            }
+        }
+    }
 
+    public static Ristoratori[] ricercaComune(String comune) {
+        String filename = "data/EatAdvisor.dati";
+        File f = new File(filename);
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura array ristoratori da EatAdvisor.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
+                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                in.close();
+                fileInput.close();
+                int elementiNull = 0;
+                // array ristoratori deserializzato
+                for (int i = 0; i < ristoratori.length; i++) {
+                    if (!ristoratori[i].getComune().toLowerCase().equals(comune.toLowerCase())) {
+                        ristoratori[i] = null;
+                        elementiNull++;
+                    }
+                }
+                if (elementiNull == ristoratori.length) {
+                    return null;
+                } else {
+                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
+                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
+                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
+                    }
+                    return ristoratoriOk;
+                }
+            } catch (Exception e) {
+                System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    protected static Ristoratori[] ricercaTipologia(String tipologia) {
+        String filename = "data/EatAdvisor.dati";
+        File f = new File(filename);
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura array ristoratori da EatAdvisor.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
+                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                in.close();
+                fileInput.close();
+                int elementiNull = 0;
+                // array ristoratori deserializzato
+                for (int i = 0; i < ristoratori.length; i++) {
+                    if (!ristoratori[i].getTipologia().equals(tipologia)) {
+                        ristoratori[i] = null;
+                        elementiNull++;
+                    }
+                }
+                if (elementiNull == ristoratori.length) {
+                    return null;
+                } else {
+                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
+                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
+                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
+                    }
+                    return ristoratoriOk;
+                }
+            } catch (Exception e) {
+                System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    protected Ristoratori[] ricercaNome(String nome) {
+        String filename = "data/EatAdvisor.dati";
+        File f = new File(filename);
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura array ristoratori da EatAdvisor.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
+                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                in.close();
+                fileInput.close();
+                int elementiNull = 0;
+                // array ristoratori deserializzato
+                for (int i = 0; i < ristoratori.length; i++) {
+                    if (!ristoratori[i].getNome().toLowerCase().matches(nome.toLowerCase())) {
+                        ristoratori[i] = null;
+                        elementiNull++;
+                    }
+                }
+                if (elementiNull == ristoratori.length) {
+                    return null;
+                } else {
+                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
+                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
+                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
+                    }
+                    return ristoratoriOk;
+                }
+            } catch (Exception e) {
+                System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    protected Ristoratori[] ricercaComuneTipologia(String comune, String tipologia) {
+        Ristoratori[] ristoratori = ricercaComune(comune);
+        int elementiNull = 0;
+        if (ristoratori != null){
+            for (int i = 0; i < ristoratori.length; i++) {
+                if (ristoratori[i] == null) {
+                    elementiNull++;
+                } else {
+                    if (!ristoratori[i].getTipologia().toLowerCase().equals(tipologia.toLowerCase())) {
+                        ristoratori[i] = null;
+                        elementiNull++;
+                    }
+                }
+            }
+            if (elementiNull == ristoratori.length) {
+                return null;
+            } else {
+                Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
+                for (int i = 0; i < ristoratori.length - elementiNull; i++) {
+                    if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
+                }
+                return ristoratoriOk;
+            }
+        } else return null;
+    }
+
+    private static String capitalize(String s) {
+        if(s == null || s.isEmpty()) {
+            return s;
+        }
+
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+
+    public static void visualizzaRistorante(Ristoratori[] ristoratori) {
+        if (ristoratori != null) {
+            for (Ristoratori r : ristoratori) {
+                String indirizzo = capitalize(r.getTipoIndirizzo()) + " " + capitalize(r.getNomeIndirizzo()) + ", #" +
+                        r.getCivico() + ", " + capitalize(r.getComune()) + ", " + r.getProvincia() + " " + r.getCap();
+                System.out.println("Nome: " + r.getNome());
+                System.out.println("Indirizzo: " + indirizzo);
+                System.out.println("Telefono: " + r.getTelefono());
+                System.out.println("Sito web: " + r.getUrl());
+                System.out.println("Tipologia: " + capitalize(r.getTipologia()));
+                System.out.print("Giudizi: ");
+                if (r.getGiudizi() != null) {
+                    for (Giudizio g : r.getGiudizi()) {
+                        System.out.println("\nAutore: " + g.getAutore());
+                        System.out.println("Voto: " + g.getVoto());
+                        if (g.getCommento() != null) System.out.println("Commento: " + g.getCommento() + "\n");
+                        System.out.println();
+                    }
+                } else {
+                    System.out.println("nessuno, per ora...\n");
+                }
+            }
+        }
+    }
 
 }

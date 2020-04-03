@@ -4,7 +4,6 @@ import EatAdvisor.ristoratori.Ristoratori;
 
 import java.io.*;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class Clienti implements Serializable {
 
@@ -32,17 +31,29 @@ public class Clienti implements Serializable {
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura stack utenti da utenti.dati
+                // lettura array utenti da utenti.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
 
-                Stack<Clienti> utenti = (Stack<Clienti>) in.readObject();
+                Clienti[] utentiTemp = (Clienti[]) in.readObject();
 
                 in.close();
                 fileInput.close();
 
-                // stack utenti deserializzata
-                utenti.push(this);
+                Clienti[] utenti = new Clienti[utentiTemp.length+1];
+
+                for (int i = 0; i < utentiTemp.length; i++) {
+                    if (utentiTemp[i].nickname.equals(this.nickname)) {
+                        System.out.println("E' gia' presente un utente con questo nickname.");
+                        throw new Exception();
+                    } else {
+                        utenti[i] = utentiTemp[i];
+                    }
+                }
+
+                // array utenti deserializzato
+
+                utenti[utenti.length-1] = this;
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
@@ -55,18 +66,18 @@ public class Clienti implements Serializable {
 
                 System.out.println("Dati inseriti con successo!\n");
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println("Dati non inseriti");
             }
         } else {
             try {
-                Stack<Clienti> utenti = new Stack<Clienti>();
-                utenti.push(this);
+                Clienti[] utenti = new Clienti[1];
+                utenti[0] = this;
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
 
-                // serializzazione oggetto nel file EatAdvisor.dati
+                // serializzazione oggetto nel file utenti.dati
                 out.writeObject(utenti);
 
                 out.close();
@@ -74,58 +85,39 @@ public class Clienti implements Serializable {
 
                 System.out.println("Dati inseriti con successo!\n");
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 System.out.println("Dati non inseriti");
             }
         }
-
-
-
-
-//        String filename = "data/utenti.dati";
-//        try {
-//            FileOutputStream f = new FileOutputStream(filename);
-//            ObjectOutputStream out = new ObjectOutputStream(f);
-//
-//            // serializzazione oggetto nel file EatAdvisor.dati
-//            out.writeObject(this);
-//
-//            out.close();
-//            f.close();
-//
-//            System.out.println("Dati inseriti con successo!\n");
-//
-//        }
-//        catch(IOException e) {
-//            System.out.println("Dati non inseriti");
-//        }
     }
+
+
 
     /*TODO:
 
-       main: menu selezione utente (guest, registrazione, autenticazione);
+       *****OK*****main: menu selezione utente (guest, registrazione, autenticazione);
 
        guest: può ricercare un ristorante, selezionarlo e visualizzare i giudizi;
 
-       registrazione: acquisisci nome, cognome, comune di residenza, sigla provincia di residenza, indirizzo di posta,
-       nickname, password. dopo aver fatto ciò si è automaticamente loggati e si può usare l'app;
+       *****OK*****registrazione: acquisisci nome, cognome, comune di residenza, sigla provincia di residenza, indirizzo di posta,
+                   nickname, password. dopo aver fatto ciò si è automaticamente loggati e si può usare l'app;
 
        autenticazione: acquisisci nickname e password, autentica, usa l'app;
 
        funzioni di ricerca:
-          ricercaComune(String comune): restituisce l'elenco dei nomi dei ristoranti del comune;
-          ricercaTipologia(String tipologia): restituisce l'elenco dei nomi dei ristoranti di quella tipologia;
-          ricercaNome(String nome): restituisce l'elenco dei ristoranti il cui nome CONTIENE quel nome;
-          ricercaComuneTipologia(String comune, String tipologia): restituisce l'elenco dei ristoranti di quella tipologia IN quel comune;
+          *****OK*****ricercaComune(String comune): restituisce l'elenco dei nomi dei ristoranti del comune;
+          *****OK*****ricercaTipologia(String tipologia): restituisce l'elenco dei nomi dei ristoranti di quella tipologia;
+          *****OK*****ricercaNome(String nome): restituisce l'elenco dei ristoranti il cui nome CONTIENE quel nome;
+          *****OK*****ricercaComuneTipologia(String comune, String tipologia): restituisce l'elenco dei ristoranti di quella tipologia IN quel comune;
 
        funzioni di selezione:
           seleziona(String[] ristoranti, int n): partendo dall'elenco ristoranti, seleziona quello in posizione n-1;
 
        funzioni di visualizzazione:
-          private visualizza(): usando l'attributo cliente.ristorante, ne visualizza:
-              - tutte le info del ristorante,
-              - #valori per ogni valore della scala (es. 1 giudizio da 1 stella, 3 giudizi da 2 stelle, ecc)
-              - giudizi testuali (nickname autore, valutazione numerica e testuale)
+          *****OK*****private visualizza(): usando l'attributo cliente.ristorante, ne visualizza:
+                          - tutte le info del ristorante,
+                          - #valori per ogni valore della scala (es. 1 giudizio da 1 stella, 3 giudizi da 2 stelle, ecc)
+                          - giudizi testuali (nickname autore, valutazione numerica e testuale)
     */
 
 
@@ -144,8 +136,27 @@ public class Clienti implements Serializable {
 
         switch (n) {
             case 0: break;
-
             case 1:
+                System.out.println("\nHai scelto di utilizzare l'applicazione come ospite.\n");
+                System.out.println("Per ricercare un ristorante per comune, inserisci 1.\nPer ricercare un ristorante " +
+                        "per tipologia, inserisci 2.\nPer ricercare un ristorante per nome, inserisci 3.\nPer ricercare " +
+                        "un ristorante di una tipologia in un comune, inserisci 4.\nPer uscire, inserisci 0.\n");
+                n = Integer.parseInt(EatAdvisor.input(input, 16));
+
+                switch (n) {
+                    case 0: break;
+                    case 1:
+                        System.out.println("Hai scelto di ricercare un ristorante per comune.");
+                        System.out.println("Inserisci il comune del ristorante: ");
+                        String comune = EatAdvisor.input(input, 6);
+                        Ristoratori[] r = EatAdvisor.ricercaComune(comune);
+                        if (r == null) {
+                            System.out.println("Nessun ristorante trovato con comune " + comune + ".");
+                        } else {
+                            EatAdvisor.visualizzaRistorante(r);
+                        }
+                }
+
 
                 break;
 
