@@ -190,7 +190,7 @@ public class Clienti implements Serializable {
     }
 
     public void giudica(Scanner input, Ristoratori r) {
-        System.out.println("Inserisci un voto: ");
+        System.out.println("Inserisci un voto (min1,2,3,4,5max): ");
         int voto = Integer.parseInt(EatAdvisor.input(input, 19));
         System.out.println("(Opzionale) inserisci un commento: ");
         String commento = EatAdvisor.input(input, 20);
@@ -223,10 +223,12 @@ public class Clienti implements Serializable {
                     EatAdvisor.visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
                     int sel = Integer.parseInt(EatAdvisor.input(input, 17));
-                    Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                    EatAdvisor.visualizzaInfoRistorante(ristorante);
-                    if (aggiungiGiudizio(input)) {
-                        c.giudica(input, ristorante);
+                    if (sel != 0) {
+                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
+                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        if (aggiungiGiudizio(input)) {
+                            c.giudica(input, ristorante);
+                        }
                     }
                 }
                 break;
@@ -241,10 +243,12 @@ public class Clienti implements Serializable {
                     EatAdvisor.visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
                     int sel = Integer.parseInt(EatAdvisor.input(input, 17));
-                    Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                    EatAdvisor.visualizzaInfoRistorante(ristorante);
-                    if (aggiungiGiudizio(input)) {
-                        c.giudica(input, ristorante);
+                    if (sel != 0) {
+                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
+                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        if (aggiungiGiudizio(input)) {
+                            c.giudica(input, ristorante);
+                        }
                     }
                 }
                 break;
@@ -259,10 +263,12 @@ public class Clienti implements Serializable {
                     EatAdvisor.visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
                     int sel = Integer.parseInt(EatAdvisor.input(input, 17));
-                    Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                    EatAdvisor.visualizzaInfoRistorante(ristorante);
-                    if (aggiungiGiudizio(input)) {
-                        c.giudica(input, ristorante);
+                    if (sel != 0) {
+                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
+                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        if (aggiungiGiudizio(input)) {
+                            c.giudica(input, ristorante);
+                        }
                     }
                 }
                 break;
@@ -279,10 +285,12 @@ public class Clienti implements Serializable {
                     EatAdvisor.visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
                     int sel = Integer.parseInt(EatAdvisor.input(input, 17));
-                    Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                    EatAdvisor.visualizzaInfoRistorante(ristorante);
-                    if (aggiungiGiudizio(input)) {
-                        c.giudica(input, ristorante);
+                    if (sel != 0) {
+                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
+                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        if (aggiungiGiudizio(input)) {
+                            c.giudica(input, ristorante);
+                        }
                     }
                 }
                 break;

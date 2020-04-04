@@ -53,7 +53,7 @@ public class EatAdvisor {
         String regexCap = "^[0-9]{5}$";
         String regexTelefono = "^(\\+[0-9]{12}|[0-9]{10})$";
         String regexUrl = "^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$";
-        String regexTipologiaRistorante = "^(italiano|Italiano|etnico|Etnico|fusion|Fusion)$";
+        String regexTipologiaRistorante = "^(italiano|etnico|fusion)$";
 
         String regexCognome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexEmail = "^[a-zA-Z0-9_.-]{1,64}@[a-zA-Z0-9.-]{1,}\\.[a-zA-Z]{2,3}$";
@@ -270,13 +270,13 @@ public class EatAdvisor {
                     }
                 }
             case 11:
-                s = input.nextLine();
+                s = input.nextLine().toLowerCase();
                 if (validate(s, 11)) {
                     return s;
                 } else {
                     while (true) {
                         System.out.println("\nRiprovare.\n");
-                        s = input.nextLine();
+                        s = input.nextLine().toLowerCase();
                         if (validate(s, 11)) {
                             return s;
                         }
