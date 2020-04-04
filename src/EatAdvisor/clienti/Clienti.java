@@ -1,12 +1,13 @@
 package EatAdvisor.clienti;
+
 import EatAdvisor.EatAdvisor;
-import EatAdvisor.ristoratori.Ristoratori;
 import EatAdvisor.Giudizio;
+import EatAdvisor.ristoratori.Ristoratori;
 
 import java.io.*;
 import java.util.Scanner;
 
-public class Clienti implements Serializable {
+public class Clienti extends EatAdvisor implements Serializable {
 
     private String nome;
     private String cognome;
@@ -16,7 +17,7 @@ public class Clienti implements Serializable {
     private String nickname;
     private String password;
 
-    public Clienti (String nome, String cognome, String comune, String provincia, String email, String nickname, String password) {
+    public Clienti(String nome, String cognome, String comune, String provincia, String email, String nickname, String password) {
         this.nome = nome;
         this.cognome = cognome;
         this.comune = comune;
@@ -129,56 +130,57 @@ public class Clienti implements Serializable {
         System.out.println("Per ricercare un ristorante per comune, inserisci 1.\nPer ricercare un ristorante " +
                 "per tipologia, inserisci 2.\nPer ricercare un ristorante per nome, inserisci 3.\nPer ricercare " +
                 "un ristorante di una tipologia in un comune, inserisci 4.\nPer uscire, inserisci 0.\n");
-        int n = Integer.parseInt(EatAdvisor.input(input, 16));
+        int n = Integer.parseInt(input(input, 16));
         switch (n) {
-            case 0: break;
+            case 0:
+                break;
             case 1:
                 System.out.println("Hai scelto di ricercare un ristorante per comune.");
                 System.out.println("Inserisci il comune del ristorante: ");
-                comune = EatAdvisor.input(input, 6);
-                r = EatAdvisor.ricercaComune(comune);
+                comune = input(input, 6);
+                r = ricercaComune(comune);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con comune " + comune + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
-                            System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
-                            int sel = Integer.parseInt(EatAdvisor.input(input, 17));
-                            EatAdvisor.visualizzaInfoRistorante(EatAdvisor.selezionaRistorante(r, sel));
+                    visualizzaRistoranti(r);
+                    System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
+                    int sel = Integer.parseInt(input(input, 17));
+                    visualizzaInfoRistorante(selezionaRistorante(r, sel));
                 }
                 break;
             case 2:
                 System.out.println("Hai scelto di ricercare un ristorante per tipologia.");
                 System.out.println("Inserisci la tipologia del ristorante: ");
-                tipologia = EatAdvisor.input(input, 11);
-                r = EatAdvisor.ricercaTipologia(tipologia);
+                tipologia = input(input, 11);
+                r = ricercaTipologia(tipologia);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con tipologia " + tipologia + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                 }
                 break;
             case 3:
                 System.out.println("Hai scelto di ricercare un ristorante per nome.");
                 System.out.println("Inserisci il nome del ristorante: ");
-                nome = EatAdvisor.input(input, 2);
-                r = EatAdvisor.ricercaNome(nome);
+                nome = input(input, 2);
+                r = ricercaNome(nome);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con nome " + nome + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                 }
                 break;
             case 4:
                 System.out.println("Hai scelto di ricercare un ristorante per comune e tipologia.");
                 System.out.println("Inserisci il comune del ristorante: ");
-                comune = EatAdvisor.input(input, 6);
+                comune = input(input, 6);
                 System.out.println("Inserisci il la tipologia del ristorante: ");
-                tipologia = EatAdvisor.input(input, 11);
-                r = EatAdvisor.ricercaComuneTipologia(comune, tipologia);
+                tipologia = input(input, 11);
+                r = ricercaComuneTipologia(comune, tipologia);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con tipologia " + tipologia + " nel comune " + comune + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                 }
                 break;
         }
@@ -186,14 +188,14 @@ public class Clienti implements Serializable {
 
     public static boolean aggiungiGiudizio(Scanner input) {
         System.out.println("Se desideri aggiungere un giudizio a questo ristorante, inserisci 1.");
-        return Integer.parseInt(EatAdvisor.input(input, 18)) == 1;
+        return Integer.parseInt(input(input, 18)) == 1;
     }
 
     public void giudica(Scanner input, Ristoratori r) {
         System.out.println("Inserisci un voto (min1,2,3,4,5max): ");
-        int voto = Integer.parseInt(EatAdvisor.input(input, 19));
+        int voto = Integer.parseInt(input(input, 19));
         System.out.println("(Opzionale) inserisci un commento: ");
-        String commento = EatAdvisor.input(input, 20);
+        String commento = input(input, 20);
         if (r.getGiudizi() == null) {
             r.addGiudizio(new Giudizio(this.nickname, voto, commento));
             r.aggiorna();
@@ -209,23 +211,24 @@ public class Clienti implements Serializable {
         System.out.println("Per ricercare un ristorante per comune, inserisci 1.\nPer ricercare un ristorante " +
                 "per tipologia, inserisci 2.\nPer ricercare un ristorante per nome, inserisci 3.\nPer ricercare " +
                 "un ristorante di una tipologia in un comune, inserisci 4.\nPer uscire, inserisci 0.\n");
-        int n = Integer.parseInt(EatAdvisor.input(input, 16));
+        int n = Integer.parseInt(input(input, 16));
         switch (n) {
-            case 0: break;
+            case 0:
+                break;
             case 1:
                 System.out.println("Hai scelto di ricercare un ristorante per comune.");
                 System.out.println("Inserisci il comune del ristorante: ");
-                comune = EatAdvisor.input(input, 6);
-                r = EatAdvisor.ricercaComune(comune);
+                comune = input(input, 6);
+                r = ricercaComune(comune);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con comune " + comune + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
-                    int sel = Integer.parseInt(EatAdvisor.input(input, 17));
+                    int sel = Integer.parseInt(input(input, 17));
                     if (sel != 0) {
-                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        Ristoratori ristorante = selezionaRistorante(r, sel);
+                        visualizzaInfoRistorante(ristorante);
                         if (aggiungiGiudizio(input)) {
                             c.giudica(input, ristorante);
                         }
@@ -235,17 +238,17 @@ public class Clienti implements Serializable {
             case 2:
                 System.out.println("Hai scelto di ricercare un ristorante per tipologia.");
                 System.out.println("Inserisci la tipologia del ristorante: ");
-                tipologia = EatAdvisor.input(input, 11);
-                r = EatAdvisor.ricercaTipologia(tipologia);
+                tipologia = input(input, 11);
+                r = ricercaTipologia(tipologia);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con tipologia " + tipologia + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
-                    int sel = Integer.parseInt(EatAdvisor.input(input, 17));
+                    int sel = Integer.parseInt(input(input, 17));
                     if (sel != 0) {
-                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        Ristoratori ristorante = selezionaRistorante(r, sel);
+                        visualizzaInfoRistorante(ristorante);
                         if (aggiungiGiudizio(input)) {
                             c.giudica(input, ristorante);
                         }
@@ -255,17 +258,17 @@ public class Clienti implements Serializable {
             case 3:
                 System.out.println("Hai scelto di ricercare un ristorante per nome.");
                 System.out.println("Inserisci il nome del ristorante: ");
-                nome = EatAdvisor.input(input, 2);
-                r = EatAdvisor.ricercaNome(nome);
+                nome = input(input, 2);
+                r = ricercaNome(nome);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con nome " + nome + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
-                    int sel = Integer.parseInt(EatAdvisor.input(input, 17));
+                    int sel = Integer.parseInt(input(input, 17));
                     if (sel != 0) {
-                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        Ristoratori ristorante = selezionaRistorante(r, sel);
+                        visualizzaInfoRistorante(ristorante);
                         if (aggiungiGiudizio(input)) {
                             c.giudica(input, ristorante);
                         }
@@ -275,19 +278,19 @@ public class Clienti implements Serializable {
             case 4:
                 System.out.println("Hai scelto di ricercare un ristorante per comune e tipologia.");
                 System.out.println("Inserisci il comune del ristorante: ");
-                comune = EatAdvisor.input(input, 6);
+                comune = input(input, 6);
                 System.out.println("Inserisci il la tipologia del ristorante: ");
-                tipologia = EatAdvisor.input(input, 11);
-                r = EatAdvisor.ricercaComuneTipologia(comune, tipologia);
+                tipologia = input(input, 11);
+                r = ricercaComuneTipologia(comune, tipologia);
                 if (r == null) {
                     System.out.println("Nessun ristorante trovato con tipologia " + tipologia + " nel comune " + comune + ".");
                 } else {
-                    EatAdvisor.visualizzaRistoranti(r);
+                    visualizzaRistoranti(r);
                     System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
-                    int sel = Integer.parseInt(EatAdvisor.input(input, 17));
+                    int sel = Integer.parseInt(input(input, 17));
                     if (sel != 0) {
-                        Ristoratori ristorante = EatAdvisor.selezionaRistorante(r, sel);
-                        EatAdvisor.visualizzaInfoRistorante(ristorante);
+                        Ristoratori ristorante = selezionaRistorante(r, sel);
+                        visualizzaInfoRistorante(ristorante);
                         if (aggiungiGiudizio(input)) {
                             c.giudica(input, ristorante);
                         }
@@ -320,8 +323,8 @@ public class Clienti implements Serializable {
                 "Se sei un utente registrato e vuoi autenticarti, inserisci 3.\n" +
                 "Per uscire, inserisci 0.\n");
 
-        Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int n = Integer.parseInt(EatAdvisor.input(input, 1));
+            Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+            int n = Integer.parseInt(input(input, 1));
 
             switch (n) {
                 case 0: finish = true; break;
@@ -343,20 +346,20 @@ public class Clienti implements Serializable {
                     while (!ok) {
                         System.out.println("\nHai scelto di registrarti.");
                         System.out.println("Inserisci il tuo nome: ");
-                        nome = EatAdvisor.input(input, 2);
+                        nome = input(input, 2);
                         System.out.println("\nOk!\nInserisci il tuo cognome: ");
-                        cognome = EatAdvisor.input(input, 12);
+                        cognome = input(input, 12);
                         System.out.println("\nOk!\nInserisci il tuo comune di residenza (Varese, Milano, Roma, ...): ");
-                        comune = EatAdvisor.input(input, 6);
+                        comune = input(input, 6);
                         System.out.println("\nOk!\nInserisci la sigla della provincia in cui risiedi (VA, MI, RM, ...): ");
-                        provincia = EatAdvisor.input(input, 7);
+                        provincia = input(input, 7);
                         System.out.println("\nOk!\nInserisci il tuo indirizzo email: ");
-                        email = EatAdvisor.input(input, 13);
+                        email = input(input, 13);
                         System.out.println("\nOk!\nInserisci il tuo nickname: ");
-                        nickname = EatAdvisor.input(input, 14);
+                        nickname = input(input, 14);
                         System.out.println("\nOk!\nInserisci la tua password (almeno 8 caratteri, 1 lettera maiuscola, " +
                                 "1 lettera minuscola e 1 numero): ");
-                        password = EatAdvisor.input(input, 15);
+                        password = input(input, 15);
 
                         System.out.println("\nDati inseriti:");
                         System.out.println("Nome: " + nome + "\nCognome: " + cognome + "\nComune: " + comune + "\nProvincia: " +
@@ -378,8 +381,8 @@ public class Clienti implements Serializable {
                     int utente = -1;
                     System.out.println("\nHai scelto di autenticarti.");
                     System.out.println("\nInserisci il tuo nickname: ");
-                    nickname = EatAdvisor.input(input, 14);
-                    Clienti[] utenti = EatAdvisor.leggiClienti();
+                    nickname = input(input, 14);
+                    Clienti[] utenti = leggiClienti();
                     if (utenti == null) {
                         System.out.println("Utente non trovato.");
                     } else {
@@ -394,7 +397,7 @@ public class Clienti implements Serializable {
                             System.out.println("Utente non trovato.");
                         } else {
                             System.out.println("Inserisci la password: ");
-                            passwordInput = EatAdvisor.input(input, 15);
+                            passwordInput = input(input, 15);
                             if (passwordInput.equals(password)) {
                                 c = utenti[utente];
                                 menuAutenticato(input, c);

@@ -5,7 +5,7 @@ import EatAdvisor.Giudizio;
 import java.io.*;
 import java.util.Scanner;
 
-public class Ristoratori implements java.io.Serializable {
+public class Ristoratori extends EatAdvisor implements java.io.Serializable {
 
     private String nome;
     private String tipoIndirizzo;
@@ -124,8 +124,8 @@ public class Ristoratori implements java.io.Serializable {
 
                 // array ristoratori deserializzato
 
-                ristoratori[ristoratori.length-1] = this;
-                EatAdvisor.sortRistorantiNome(ristoratori);
+                ristoratori[ristoratori.length - 1] = this;
+                sortRistorantiNome(ristoratori);
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
@@ -210,8 +210,8 @@ public class Ristoratori implements java.io.Serializable {
         while(!finish) {
         System.out.println("Gentile ristoratore, benvenuto in EatAdvisor, versione Ristoratore!\n\n" +
                 "Per inserire un ristorante, inserire 1\nPer uscire, inserire 0\n");
-        Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int n = Integer.parseInt(EatAdvisor.input(input, 0));
+            Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+            int n = Integer.parseInt(input(input, 0));
 
 
             switch (n) {
@@ -232,28 +232,28 @@ public class Ristoratori implements java.io.Serializable {
                     while (!ok) {
                         System.out.println("\nHa scelto di inserire un ristorante.");
                         System.out.println("Inserire il nome del ristorante: ");
-                        nome = EatAdvisor.input(input, 2);
+                        nome = input(input, 2);
                         System.out.println("\nOk!\nInserire la tipologia di indirizzo (via, viale, corso, piazza, ...): ");
-                        tipoIndirizzo = EatAdvisor.input(input, 3);
+                        tipoIndirizzo = input(input, 3);
                         System.out.println("\nOk!\nInserire l'indirizzo del ristorante: ");
-                        nomeIndirizzo = EatAdvisor.input(input, 4);
+                        nomeIndirizzo = input(input, 4);
                         System.out.println("\nOk!\nInserire il numero civico del ristorante (42, 42A, 42B, ...): ");
-                        civico = EatAdvisor.input(input, 5);
+                        civico = input(input, 5);
                         System.out.println("\nOk!\nInserire il comune del ristorante (Varese, Milano, Roma, ...): ");
-                        comune = EatAdvisor.input(input, 6);
+                        comune = input(input, 6);
                         System.out.println("\nOk!\nInserire la sigla della provincia in cui si trova " +
                                 "il comune del ristorante (VA, MI, RM, ...): ");
-                        provincia = EatAdvisor.input(input, 7);
+                        provincia = input(input, 7);
                         System.out.println("\nOk!\nInserire il CAP del comune " +
                                 "dove si trova il ristorante (21100, 20100, 00100, ...): ");
-                        cap = EatAdvisor.input(input, 8);
+                        cap = input(input, 8);
                         System.out.println("\nOk!\nInserire il numero di telefono del ristorante " +
                                 "(+39 1234567890, 1234567890, 0332 123456): ");
-                        telefono = EatAdvisor.input(input, 9);
+                        telefono = input(input, 9);
                         System.out.println("\nOk!\nInserire la url del sito web del ristorante: ");
-                        url = EatAdvisor.input(input, 10);
+                        url = input(input, 10);
                         System.out.println("\nOk!\nInserire la tipologia del del ristorante (italiano, etnico, fusion): ");
-                        tipologiaRistorante = EatAdvisor.input(input, 11);
+                        tipologiaRistorante = input(input, 11);
 
                         System.out.println("\nDati inseriti:");
                         System.out.println("Nome: " + nome + "\nIndirizzo: " + tipoIndirizzo + " " + nomeIndirizzo + " " +
