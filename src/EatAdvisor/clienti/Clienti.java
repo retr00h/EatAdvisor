@@ -295,7 +295,6 @@ public class Clienti implements Serializable {
         while (!finish) {
         Clienti c;
         Ristoratori[] r;
-        Ristoratori rSel;
         String comune;
         String tipologia;
         String nome;
