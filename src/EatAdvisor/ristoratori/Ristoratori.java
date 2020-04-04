@@ -4,7 +4,6 @@ import EatAdvisor.Giudizio;
 
 import java.io.*;
 import java.util.Scanner;
-import java.util.Stack;
 
 public class Ristoratori implements java.io.Serializable {
 
@@ -18,7 +17,7 @@ public class Ristoratori implements java.io.Serializable {
     private String telefono;
     private String url;
     private String tipologia;
-    private Stack<Giudizio> giudizi = null;
+    private Giudizio[] giudizi = null;
 
     public Ristoratori (String nome, String tipoIndirizzo, String nomeIndirizzo, String civico, String comune,
                        String provincia, String cap, String telefono, String url, String tipologia) {
@@ -75,8 +74,25 @@ public class Ristoratori implements java.io.Serializable {
         return tipologia;
     }
 
-    public Stack<Giudizio> getGiudizi() {
+    public Giudizio[] getGiudizi() {
         return giudizi;
+    }
+
+    public void addGiudizio(Giudizio g) {
+        if (giudizi == null) {
+            giudizi = new Giudizio[1];
+            giudizi[0] = g;
+        } else {
+            Giudizio[] newGiudizi = new Giudizio[giudizi.length+1];
+            for (int i = 0; i < newGiudizi.length; i++) {
+                if (i == 0) {
+                    newGiudizi[i] = g;
+                } else {
+                    newGiudizi[i] = giudizi[i-1];
+                }
+            }
+            giudizi = newGiudizi;
+        }
     }
 
     private void registraRistorante () {
@@ -147,66 +163,113 @@ public class Ristoratori implements java.io.Serializable {
         }
     }
 
+    public void aggiorna() {
+        String filename = "data/EatAdvisor.dati";
+        File f = new File(filename);
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura array ristoratori da EatAdvisor.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
+
+                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+
+                in.close();
+                fileInput.close();
+
+                for (int i = 0; i < ristoratori.length; i++) {
+                    if (ristoratori[i].nome.equals(this.nome)) {
+                        ristoratori[i] = this;
+                    }
+                }
+
+                // array ristoratori deserializzato
+
+                FileOutputStream fileOutput = new FileOutputStream(filename);
+                ObjectOutputStream out = new ObjectOutputStream(fileOutput);
+
+                // serializzazione oggetto nel file EatAdvisor.dati
+                out.writeObject(ristoratori);
+
+                out.close();
+                fileOutput.close();
+
+                System.out.println("Giudizio inserito con successo!\n");
+
+            } catch (Exception e) {
+                System.out.println("Giudizio non inserito");
+            }
+        } else {
+            System.out.println("Qualcosa e' andato storto e non e' stato possibile inserire il giudizio.");
+        }
+    }
+
     public static void main(String[] args) {
+        boolean finish = false;
+
+        while(!finish) {
         System.out.println("Gentile ristoratore, benvenuto in EatAdvisor, versione Ristoratore!\n\n" +
                 "Per inserire un ristorante, inserire 1\nPer uscire, inserire 0\n");
         Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
         int n = Integer.parseInt(EatAdvisor.input(input, 0));
 
-        switch (n) {
-            case 0: break;
-            case 1:
-                boolean finish = false;
-                String nome = "";
-                String tipoIndirizzo = "";
-                String nomeIndirizzo = "";
-                String civico = "";
-                String comune = "";
-                String provincia = "";
-                String cap = "";
-                String telefono = "";
-                String url = "";
-                String tipologiaRistorante = "";
 
-                while (!finish) {
-                    System.out.println("\nHa scelto di inserire un ristorante.");
-                    System.out.println("Inserire il nome del ristorante: ");
-                    nome = EatAdvisor.input(input, 2);
-                    System.out.println("\nOk!\nInserire la tipologia di indirizzo (via, viale, corso, piazza, ...): ");
-                    tipoIndirizzo = EatAdvisor.input(input, 3);
-                    System.out.println("\nOk!\nInserire l'indirizzo del ristorante: ");
-                    nomeIndirizzo = EatAdvisor.input(input, 4);
-                    System.out.println("\nOk!\nInserire il numero civico del ristorante (42, 42A, 42B, ...): ");
-                    civico = EatAdvisor.input(input, 5);
-                    System.out.println("\nOk!\nInserire il comune del ristorante (Varese, Milano, Roma, ...): ");
-                    comune = EatAdvisor.input(input, 6);
-                    System.out.println("\nOk!\nInserire la sigla della provincia in cui si trova " +
-                            "il comune del ristorante (VA, MI, RM, ...): ");
-                    provincia = EatAdvisor.input(input, 7);
-                    System.out.println("\nOk!\nInserire il CAP del comune " +
-                            "dove si trova il ristorante (21100, 20100, 00100, ...): ");
-                    cap = EatAdvisor.input(input, 8);
-                    System.out.println("\nOk!\nInserire il numero di telefono del ristorante " +
-                            "(+39 1234567890, 1234567890, 0332 123456): ");
-                    telefono = EatAdvisor.input(input, 9);
-                    System.out.println("\nOk!\nInserire la url del sito web del ristorante: ");
-                    url = EatAdvisor.input(input, 10);
-                    System.out.println("\nOk!\nInserire la tipologia del del ristorante (italiano, etnico, fusion): ");
-                    tipologiaRistorante = EatAdvisor.input(input, 11);
+            switch (n) {
+                case 0: finish = true; break;
+                case 1:
+                    boolean ok = false;
+                    String nome = "";
+                    String tipoIndirizzo = "";
+                    String nomeIndirizzo = "";
+                    String civico = "";
+                    String comune = "";
+                    String provincia = "";
+                    String cap = "";
+                    String telefono = "";
+                    String url = "";
+                    String tipologiaRistorante = "";
 
-                    System.out.println("\nDati inseriti:");
-                    System.out.println("Nome: " + nome + "\nIndirizzo: " + tipoIndirizzo + " " + nomeIndirizzo + " " +
-                            civico + ", " + comune + ", " + provincia + ", " + cap + "\nTelefono: " + telefono +
-                            "\nSito web: " + url + "\nTipologia: " + tipologiaRistorante + "\n");
-                    System.out.println("Inserire 1 per confermare, inserire qualunque altro carattere per reinserire: ");
+                    while (!ok) {
+                        System.out.println("\nHa scelto di inserire un ristorante.");
+                        System.out.println("Inserire il nome del ristorante: ");
+                        nome = EatAdvisor.input(input, 2);
+                        System.out.println("\nOk!\nInserire la tipologia di indirizzo (via, viale, corso, piazza, ...): ");
+                        tipoIndirizzo = EatAdvisor.input(input, 3);
+                        System.out.println("\nOk!\nInserire l'indirizzo del ristorante: ");
+                        nomeIndirizzo = EatAdvisor.input(input, 4);
+                        System.out.println("\nOk!\nInserire il numero civico del ristorante (42, 42A, 42B, ...): ");
+                        civico = EatAdvisor.input(input, 5);
+                        System.out.println("\nOk!\nInserire il comune del ristorante (Varese, Milano, Roma, ...): ");
+                        comune = EatAdvisor.input(input, 6);
+                        System.out.println("\nOk!\nInserire la sigla della provincia in cui si trova " +
+                                "il comune del ristorante (VA, MI, RM, ...): ");
+                        provincia = EatAdvisor.input(input, 7);
+                        System.out.println("\nOk!\nInserire il CAP del comune " +
+                                "dove si trova il ristorante (21100, 20100, 00100, ...): ");
+                        cap = EatAdvisor.input(input, 8);
+                        System.out.println("\nOk!\nInserire il numero di telefono del ristorante " +
+                                "(+39 1234567890, 1234567890, 0332 123456): ");
+                        telefono = EatAdvisor.input(input, 9);
+                        System.out.println("\nOk!\nInserire la url del sito web del ristorante: ");
+                        url = EatAdvisor.input(input, 10);
+                        System.out.println("\nOk!\nInserire la tipologia del del ristorante (italiano, etnico, fusion): ");
+                        tipologiaRistorante = EatAdvisor.input(input, 11);
 
-                    if (input.nextLine().equals("1")) finish = true;
-                }
+                        System.out.println("\nDati inseriti:");
+                        System.out.println("Nome: " + nome + "\nIndirizzo: " + tipoIndirizzo + " " + nomeIndirizzo + " " +
+                                civico + ", " + comune + ", " + provincia + ", " + cap + "\nTelefono: " + telefono +
+                                "\nSito web: " + url + "\nTipologia: " + tipologiaRistorante + "\n");
+                        System.out.println("Inserire 1 per confermare, inserire qualunque altro carattere per reinserire: ");
 
-                Ristoratori r = new Ristoratori(nome, tipoIndirizzo, nomeIndirizzo, civico, comune, provincia, cap, telefono, url, tipologiaRistorante);
+                        if (input.nextLine().equals("1")) ok = true;
+                    }
 
-                r.registraRistorante();
-                break;
+                    Ristoratori r = new Ristoratori(nome, tipoIndirizzo, nomeIndirizzo, civico, comune, provincia, cap, telefono, url, tipologiaRistorante);
+
+                    r.registraRistorante();
+                    break;
+            }
         }
+
     }
 }

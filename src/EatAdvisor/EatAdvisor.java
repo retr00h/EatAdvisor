@@ -1,4 +1,5 @@
 package EatAdvisor;
+import EatAdvisor.clienti.Clienti;
 import EatAdvisor.ristoratori.Ristoratori;
 
 import java.io.File;
@@ -38,6 +39,10 @@ public class EatAdvisor {
             password            15
 
             selezioneRicerca    16
+            selezioneRistorante 17
+
+            selezioneGiudizio   18
+            voto                19
          */
         String regexNome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexTipoIndirizzo = "^(via|viale|corso|piazza|piazzale|largo|lungolago|lungomare|rotonda|vicolo|vicoletto)$";
@@ -74,6 +79,33 @@ public class EatAdvisor {
             case 14: return s.matches(regexNickname);
             case 15: return s.matches(regexPassword);
             case 16: return s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3") || s.equals("4");
+            case 17:
+                try {
+                    int i = Integer.parseInt(s);
+                    if (i > 0) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
+            case 18:
+                try {
+                    int i = Integer.parseInt(s);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            case 19:
+                try {
+                    int i = Integer.parseInt(s);
+                    if (i > 0 && i < 6) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
+            case 20:
+                return s.length() <= 256;
             default: return false;
         }
     }
@@ -316,6 +348,58 @@ public class EatAdvisor {
                         }
                     }
                 }
+            case 17:
+                s = input.nextLine();
+                if (validate(s, 17)) {
+                    return s;
+                } else {
+                    while (true) {
+                        System.out.println("\nRiprovare.\n");
+                        s = input.nextLine();
+                        if (validate(s, 17)) {
+                            return s;
+                        }
+                    }
+                }
+            case 18:
+                s = input.nextLine();
+                if (validate(s, 18)) {
+                    return s;
+                } else {
+                    while (true) {
+                        System.out.println("\nRiprovare.\n");
+                        s = input.nextLine();
+                        if (validate(s, 18)) {
+                            return s;
+                        }
+                    }
+                }
+            case 19:
+                s = input.nextLine();
+                if (validate(s, 19)) {
+                    return s;
+                } else {
+                    while (true) {
+                        System.out.println("\nRiprovare. Valori consentiti: 1, 2, 3, 4, 5.\n");
+                        s = input.nextLine();
+                        if (validate(s, 19)) {
+                            return s;
+                        }
+                    }
+                }
+            case 20:
+                s = input.nextLine();
+                if (validate(s, 20)) {
+                    return s;
+                } else {
+                    while (true) {
+                        System.out.println("\nMax 256 caratteri. Riprovare.\n");
+                        s = input.nextLine();
+                        if (validate(s, 20)) {
+                            return s;
+                        }
+                    }
+                }
             default: return null;
         }
     }
@@ -375,7 +459,7 @@ public class EatAdvisor {
         }
     }
 
-    protected static Ristoratori[] ricercaTipologia(String tipologia) {
+    public static Ristoratori[] ricercaTipologia(String tipologia) {
         String filename = "data/EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
@@ -412,7 +496,7 @@ public class EatAdvisor {
         }
     }
 
-    protected Ristoratori[] ricercaNome(String nome) {
+    public static Ristoratori[] ricercaNome(String nome) {
         String filename = "data/EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
@@ -449,7 +533,7 @@ public class EatAdvisor {
         }
     }
 
-    protected Ristoratori[] ricercaComuneTipologia(String comune, String tipologia) {
+    public static Ristoratori[] ricercaComuneTipologia(String comune, String tipologia) {
         Ristoratori[] ristoratori = ricercaComune(comune);
         int elementiNull = 0;
         if (ristoratori != null){
@@ -498,18 +582,65 @@ public class EatAdvisor {
     }
 
 
-    public static void visualizzaRistorante(Ristoratori[] ristoratori) {
+    public static void visualizzaRistoranti(Ristoratori[] ristoratori) {
         if (ristoratori != null) {
-            for (Ristoratori r : ristoratori) {
-                String indirizzo = capitalize(r.getTipoIndirizzo()) + " " + capitalize(r.getNomeIndirizzo()) + ", #" +
-                        r.getCivico() + ", " + capitalize(r.getComune()) + ", " + r.getProvincia() + " " + r.getCap();
-                System.out.println("Nome: " + r.getNome());
+            for (int i = 0; i < ristoratori.length; i++) {
+                String indirizzo = capitalize(ristoratori[i].getTipoIndirizzo()) + " " +
+                        capitalize(ristoratori[i].getNomeIndirizzo()) + ", #" +
+                        ristoratori[i].getCivico() + ", " + capitalize(ristoratori[i].getComune()) + ", " +
+                        ristoratori[i].getProvincia() + " " + ristoratori[i].getCap();
+                System.out.println("Ristorante " + (i+1));
+                System.out.println("Nome: " + ristoratori[i].getNome());
                 System.out.println("Indirizzo: " + indirizzo);
-                System.out.println("Telefono: " + r.getTelefono());
-                System.out.println("Sito web: " + r.getUrl());
-                System.out.println("Tipologia: " + capitalize(r.getTipologia()));
+                System.out.println();
             }
         }
+    }
+
+    public static Ristoratori selezionaRistorante(Ristoratori[] ristoratori, int n) {
+        n--;
+        if (n >= 0 && n <= ristoratori.length) {
+            return ristoratori[n];
+        } else {
+            return null;
+        }
+    }
+
+    public static void visualizzaInfoRistorante(Ristoratori r) {
+        if (r != null) {
+            String indirizzo = capitalize(r.getTipoIndirizzo()) + " " + capitalize(r.getNomeIndirizzo()) + ", #" +
+                    r.getCivico() + ", " + capitalize(r.getComune()) + ", " + r.getProvincia() + " " + r.getCap();
+            System.out.println("Nome: " + r.getNome());
+            System.out.println("Indirizzo: " + indirizzo);
+            System.out.println("Telefono: " + r.getTelefono());
+            System.out.println("Sito web: " + r.getUrl());
+            System.out.println("Tipologia: " + capitalize(r.getTipologia()));
+            visualizzaGiudizi(r);
+        }
+    }
+
+    public static Clienti[] leggiClienti() {
+        String filename = "data/Utenti.dati";
+        File f = new File(filename);
+        Clienti[] utenti = null;
+        if (f.exists() && !f.isDirectory()) {
+            try {
+                // lettura array utenti da utenti.dati
+                FileInputStream fileInput = new FileInputStream(filename);
+                ObjectInputStream in = new ObjectInputStream(fileInput);
+
+                utenti = (Clienti[]) in.readObject();
+
+                in.close();
+                fileInput.close();
+                return utenti;
+            } catch (Exception e) {
+                System.out.println("Qualcosa e' andato storto e non e' stato possibile leggere i dati degli utenti.");
+            }
+        } else {
+            System.out.println("Non ci sono utenti registrati.");
+        }
+        return utenti;
     }
 
 }
