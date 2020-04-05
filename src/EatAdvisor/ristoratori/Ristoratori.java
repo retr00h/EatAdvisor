@@ -19,7 +19,12 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
     private String tipologia;
     private Giudizio[] giudizi = null;
 
-    public Ristoratori (String nome, String tipoIndirizzo, String nomeIndirizzo, String civico, String comune,
+    /**
+     * Costruttore.
+     * Costruisce l'oggetto Ristoratori specificando nome, tipoIndirizzo, nomeIndirizzo, civico, comune,
+     * provincia, cap, telefono, url, tipologia
+     */
+    public Ristoratori(String nome, String tipoIndirizzo, String nomeIndirizzo, String civico, String comune,
                        String provincia, String cap, String telefono, String url, String tipologia) {
 
         this.nome = nome;
@@ -34,70 +39,123 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
         this.tipologia = tipologia;
     }
 
+    /**
+     * @return nome del ristorante
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * @return tipoIndirizzo del ristorante
+     */
     public String getTipoIndirizzo() {
         return tipoIndirizzo;
     }
 
+    /**
+     * @return nomeIndirizzo del ristorante
+     */
     public String getNomeIndirizzo() {
         return nomeIndirizzo;
     }
 
+    /**
+     * @return civico del ristorante
+     */
     public String getCivico() {
         return civico;
     }
 
+    /**
+     * @return comune del ristorante
+     */
     public String getComune() {
         return comune;
     }
 
+    /**
+     * @return provincia del ristorante
+     */
     public String getProvincia() {
         return provincia;
     }
 
+    /**
+     * @return cap del ristorante
+     */
     public String getCap() {
         return cap;
     }
 
+    /**
+     * @return telefono del ristorante
+     */
     public String getTelefono() {
         return telefono;
     }
 
+    /**
+     * @return url del ristorante
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * @return tipologia del ristorante
+     */
     public String getTipologia() {
         return tipologia;
     }
 
+    /**
+     * @return array giudizi del ristorante
+     */
     public Giudizio[] getGiudizi() {
         return giudizi;
     }
 
+    /**
+     * Se l'array dei giudizi del ristorante non esiste, lo crea e aggiunge il giudizio.
+     * Altrimenti crea un nuovo array di giudizi, aggiunge il giudizio "in testa", e poi aggiunge
+     * i giudizi precedenti.
+     *
+     * @param g array dal quale selezionare un ristorante
+     */
     public void addGiudizio(Giudizio g) {
         if (giudizi == null) {
             giudizi = new Giudizio[1];
             giudizi[0] = g;
         } else {
-            Giudizio[] newGiudizi = new Giudizio[giudizi.length+1];
+            Giudizio[] newGiudizi = new Giudizio[giudizi.length + 1];
             for (int i = 0; i < newGiudizi.length; i++) {
                 if (i == 0) {
                     newGiudizi[i] = g;
                 } else {
-                    newGiudizi[i] = giudizi[i-1];
+                    newGiudizi[i] = giudizi[i - 1];
                 }
             }
             giudizi = newGiudizi;
         }
     }
 
-    private void registraRistorante () {
+    /**
+     * Controlla che il file EatAdvisor.dati esista. Se esiste, legge gli i ristoranti gia' salvati e controlla
+     * che il ristorante invocante non sia gia' presente.
+     * Se non lo e' lo aggiunge ai ristoranti gia' presenti e li serializza.
+     * <p>
+     * Se il file non esiste, serializza i dati del ristorante.
+     */
+    private void registraRistorante() {
         String filename = "data/EatAdvisor.dati";
         File f = new File(filename);
+
+        File directory = new File("data/");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+
         if (f.exists() && !f.isDirectory()) {
             try {
                 // lettura array ristoratori da EatAdvisor.dati
@@ -109,8 +167,10 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                 in.close();
                 fileInput.close();
 
-                Ristoratori[] ristoratori = new Ristoratori[ristoratoriTemp.length+1];
+                Ristoratori[] ristoratori = new Ristoratori[ristoratoriTemp.length + 1];
 
+                // se il nome del ristorante invocante e' gia inserito E l'indirizzo e' lo stesso,
+                // stampa un errore e interrompe l'esecuzione del metodo
                 for (int i = 0; i < ristoratoriTemp.length; i++) {
                     if (ristoratoriTemp[i].nome.equals(this.nome) && ristoratoriTemp[i].tipoIndirizzo.equals(this.tipoIndirizzo) &&
                             ristoratoriTemp[i].nomeIndirizzo.equals(this.nomeIndirizzo) &&
@@ -123,7 +183,6 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                 }
 
                 // array ristoratori deserializzato
-
                 ristoratori[ristoratori.length - 1] = this;
                 sortRistorantiNome(ristoratori);
 
@@ -163,6 +222,11 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
         }
     }
 
+    /**
+     * Controlla che il file EatAdvisor.dati esista.
+     * Se esiste cerca il ristorante invocante tra quelli serializzati, lo aggiorna e serializza i dati aggiornati.
+     * Questo metodo e' utilizzato solo quando viene inserito un nuovo giudizio.
+     */
     public void aggiorna() {
         String filename = "data/EatAdvisor.dati";
         File f = new File(filename);
@@ -177,6 +241,7 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                 in.close();
                 fileInput.close();
 
+                // trova e aggiorna le informazioni del ristorante invocante
                 for (int i = 0; i < ristoratori.length; i++) {
                     if (ristoratori[i].nome.equals(this.nome)) {
                         ristoratori[i] = this;
@@ -205,14 +270,14 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
     }
 
     public static void main(String[] args) {
+        // ripropone il "form" per aggiungere un ristorante finche l'utente non inserisce 0 quando richiesto
         boolean finish = false;
 
         while(!finish) {
-        System.out.println("Gentile ristoratore, benvenuto in EatAdvisor, versione Ristoratore!\n\n" +
-                "Per inserire un ristorante, inserire 1\nPer uscire, inserire 0\n");
+            System.out.println("Gentile ristoratore, benvenuto in EatAdvisor, versione Ristoratore!\n\n" +
+                    "Per inserire un ristorante, inserire 1\nPer uscire, inserire 0\n");
             Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
             int n = Integer.parseInt(input(input, 0));
-
 
             switch (n) {
                 case 0: finish = true; break;
@@ -252,7 +317,7 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                         telefono = input(input, 9);
                         System.out.println("\nOk!\nInserire la url del sito web del ristorante: ");
                         url = input(input, 10);
-                        System.out.println("\nOk!\nInserire la tipologia del del ristorante (italiano, etnico, fusion): ");
+                        System.out.println("\nOk!\nInserire la tipologia del ristorante (italiano, etnico, fusion): ");
                         tipologiaRistorante = input(input, 11);
 
                         System.out.println("\nDati inseriti:");
