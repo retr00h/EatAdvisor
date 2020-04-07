@@ -1,7 +1,6 @@
 // Fabio Cirelli, matricola 740482, sede Varese
 
 package EatAdvisor;
-
 import EatAdvisor.clienti.Clienti;
 import EatAdvisor.ristoratori.Ristoratori;
 
@@ -46,6 +45,7 @@ public class EatAdvisor {
 
             selezioneGiudizio   18
             voto                19
+            commento            20
          */
         String regexNome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexTipoIndirizzo = "^(via|viale|corso|piazza|piazzale|largo|lungolago|lungomare|rotonda|vicolo|vicoletto)$";
@@ -61,7 +61,7 @@ public class EatAdvisor {
         String regexCognome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexEmail = "^[a-zA-Z0-9_.-]{1,64}@[a-zA-Z0-9.-]{1,}\\.[a-zA-Z]{2,3}$";
         String regexNickname = "^[A-Za-z0-9_.\\-]+$";
-        String regexPassword = "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})";
+        String regexPassword = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})";
 
         switch (op) {
             case 0: return s.equals("0") || s.equals("1");
@@ -139,7 +139,6 @@ public class EatAdvisor {
                         }
                     }
                 }
-
             case 1:
                 s = input.nextLine();
                 if (validate(s, 1)) {

@@ -227,7 +227,7 @@ public class Clienti extends EatAdvisor implements Serializable {
      * @param input scanner da utilizzare per ottenere dati dall'utente
      * @return true se e solo se la stringa inserita corrisponde a 1, false altrimenti
      */
-    public static boolean aggiungiGiudizio(Scanner input) {
+    private static boolean aggiungiGiudizio(Scanner input) {
         System.out.println("Se desideri aggiungere un giudizio a questo ristorante, inserisci 1.");
         return Integer.parseInt(input(input, 18)) == 1;
     }
@@ -269,7 +269,7 @@ public class Clienti extends EatAdvisor implements Serializable {
      *
      * @param input scanner da utilizzare per ottenere dati dall'utente
      */
-    public void menuAutenticato(Scanner input) {
+    private void menuAutenticato(Scanner input) {
         // ripropone il menu autenticato finche l'utente non inserisce 0 quando richiesto
         boolean finish = false;
 

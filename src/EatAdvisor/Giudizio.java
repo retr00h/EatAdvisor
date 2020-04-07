@@ -2,7 +2,7 @@
 
 package EatAdvisor;
 
-public class Giudizio implements java.io.Serializable {
+public class Giudizio extends EatAdvisor implements java.io.Serializable {
     private String autore;
     private int voto;
     private String commento;
