@@ -1,4 +1,7 @@
+// Fabio Cirelli, matricola 740482, sede Varese
+
 package EatAdvisor;
+
 import EatAdvisor.clienti.Clienti;
 import EatAdvisor.ristoratori.Ristoratori;
 
@@ -46,9 +49,9 @@ public class EatAdvisor {
          */
         String regexNome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexTipoIndirizzo = "^(via|viale|corso|piazza|piazzale|largo|lungolago|lungomare|rotonda|vicolo|vicoletto)$";
-        String regexNomeIndirizzo = "^[a-z0-9\\s]{1,128}$";
+        String regexNomeIndirizzo = "^[a-z0-9\\s]+$";
         String regexCivico = "^[0-9]{1,4}[A-Z]|[0-9]{1,4}$";
-        String regexComune = "^[a-z'\\s]{1,50}$";
+        String regexComune = "^[a-z'\\s]+$";
         String regexProvincia = "^[A-Z]{2}$";
         String regexCap = "^[0-9]{5}$";
         String regexTelefono = "^(\\+[0-9]{12}|[0-9]{10})$";
@@ -57,7 +60,7 @@ public class EatAdvisor {
 
         String regexCognome = "^[A-Za-z\\s]+[A-Za-z\\s]*$";
         String regexEmail = "^[a-zA-Z0-9_.-]{1,64}@[a-zA-Z0-9.-]{1,}\\.[a-zA-Z]{2,3}$";
-        String regexNickname = "^[A-Za-z0-9_.\\-]{1,64}$";
+        String regexNickname = "^[A-Za-z0-9_.\\-]+$";
         String regexPassword = "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})";
 
         switch (op) {
@@ -701,7 +704,7 @@ public class EatAdvisor {
      */
     public static Ristoratori selezionaRistorante(Ristoratori[] ristoratori, int n) {
         n--;
-        if (n >= 0 && n <= ristoratori.length) {
+        if (n >= 0 && n < ristoratori.length) {
             return ristoratori[n];
         } else {
             return null;

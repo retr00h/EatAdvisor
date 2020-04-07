@@ -1,4 +1,7 @@
+// Fabio Cirelli, matricola 740482, sede Varese
+
 package EatAdvisor.ristoratori;
+
 import EatAdvisor.EatAdvisor;
 import EatAdvisor.Giudizio;
 

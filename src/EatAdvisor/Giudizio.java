@@ -1,3 +1,5 @@
+// Fabio Cirelli, matricola 740482, sede Varese
+
 package EatAdvisor;
 
 public class Giudizio implements java.io.Serializable {

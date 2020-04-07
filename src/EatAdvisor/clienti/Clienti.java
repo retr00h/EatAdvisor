@@ -1,3 +1,5 @@
+// Fabio Cirelli, matricola 740482, sede Varese
+
 package EatAdvisor.clienti;
 
 import EatAdvisor.EatAdvisor;
@@ -270,6 +272,7 @@ public class Clienti extends EatAdvisor implements Serializable {
     public void menuAutenticato(Scanner input) {
         // ripropone il menu autenticato finche l'utente non inserisce 0 quando richiesto
         boolean finish = false;
+
         while (!finish) {
             Ristoratori[] r;
             String comune;
@@ -295,10 +298,10 @@ public class Clienti extends EatAdvisor implements Serializable {
                         visualizzaRistoranti(r);
                         System.out.println("Inserisci il numero del ristorante che vuoi selezionare (0 per uscire): ");
                         int sel = Integer.parseInt(input(input, 17));
-                        if (sel != 0) {
+                        if (sel != 0 && sel <= r.length + 1) {
                             Ristoratori ristorante = selezionaRistorante(r, sel);
                             visualizzaInfoRistorante(ristorante);
-                            if (aggiungiGiudizio(input)) {
+                            if (ristorante != null && aggiungiGiudizio(input)) {
                                 this.giudica(input, ristorante);
                             }
                         }
@@ -318,7 +321,7 @@ public class Clienti extends EatAdvisor implements Serializable {
                         if (sel != 0) {
                             Ristoratori ristorante = selezionaRistorante(r, sel);
                             visualizzaInfoRistorante(ristorante);
-                            if (aggiungiGiudizio(input)) {
+                            if (ristorante != null && aggiungiGiudizio(input)) {
                                 this.giudica(input, ristorante);
                             }
                         }
@@ -338,7 +341,7 @@ public class Clienti extends EatAdvisor implements Serializable {
                         if (sel != 0) {
                             Ristoratori ristorante = selezionaRistorante(r, sel);
                             visualizzaInfoRistorante(ristorante);
-                            if (aggiungiGiudizio(input)) {
+                            if (ristorante != null && aggiungiGiudizio(input)) {
                                 this.giudica(input, ristorante);
                             }
                         }
@@ -360,7 +363,7 @@ public class Clienti extends EatAdvisor implements Serializable {
                         if (sel != 0) {
                             Ristoratori ristorante = selezionaRistorante(r, sel);
                             visualizzaInfoRistorante(ristorante);
-                            if (aggiungiGiudizio(input)) {
+                            if (ristorante != null && aggiungiGiudizio(input)) {
                                 this.giudica(input, ristorante);
                             }
                         }
@@ -368,7 +371,6 @@ public class Clienti extends EatAdvisor implements Serializable {
                     break;
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -376,22 +378,22 @@ public class Clienti extends EatAdvisor implements Serializable {
 
         // ripropone il menu principale finché l'utente non inserisce 0 quando richiesto
         while (!finish) {
-        Clienti c;
-        String comune;
-        String nome;
+            Clienti c;
+            String comune;
+            String nome;
 
-        String cognome = "";
-        String provincia = "";
-        String email = "";
-        String nickname = "";
-        String password = "";
+            String cognome = "";
+            String provincia = "";
+            String email = "";
+            String nickname = "";
+            String password = "";
 
-        System.out.println("Gentile utente, benvenuto in EatAdvisor, versione Cliente!\n\n" +
-                "Se vuoi usare l'applicazione come ospite, inserisci 1. E' necessario registrarsi (o autenticarsi) " +
-                "per avere accesso a tutte le funzionalita'.\n" +
-                "Se vuoi registrarti, inserisci 2.\n" +
-                "Se sei un utente registrato e vuoi autenticarti, inserisci 3.\n" +
-                "Per uscire, inserisci 0.\n");
+            System.out.println("Gentile utente, benvenuto in EatAdvisor, versione Cliente!\n\n" +
+                    "Se vuoi usare l'applicazione come ospite, inserisci 1. E' necessario registrarsi (o autenticarsi) " +
+                    "per avere accesso a tutte le funzionalita'.\n" +
+                    "Se vuoi registrarti, inserisci 2.\n" +
+                    "Se sei un utente registrato e vuoi autenticarti, inserisci 3.\n" +
+                    "Per uscire, inserisci 0.\n");
 
             Scanner input = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
             int n = Integer.parseInt(input(input, 1));
