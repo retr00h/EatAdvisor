@@ -127,12 +127,12 @@ public class EatAdvisor {
     /**
      * Legge s da input, fa un primo confronto utilizzando EatAdvisor.validate(String s, int op).
      * Se tale confronto da' esito positivo, ritorna s.
-     * Altrimenti itera finche' EatAdvisor.validate(String s, int op) risulta false.
+     * Altrimenti itera finche' EatAdvisor.validate(String s, int op) non risulta true.
      * Per alcuni op viene modificata la stringa in input tramite String.toLowerCase() o String.toUpperCase().
      *
-     * @param  input  stringa da validare
-     * @param  op tipo di stringa
-     * @return      stringa inserita in input
+     * @param input stringa da validare
+     * @param op    tipo di stringa
+     * @return stringa inserita in input
      */
     public static String input(Scanner input, int op) {
         // per ogni caso possibile di input (vedere il metodo validate) legge la stringa, controlla che sia valida,
@@ -420,9 +420,9 @@ public class EatAdvisor {
     }
 
     /**
-     * Metodo statico che ordina l'array ristoratori tramite bubble sort
+     * Metodo statico che ordina l'arraylist ristoratori tramite bubble sort
      *
-     * @param ristoratori array da ordinare
+     * @param ristoratori arraylist da ordinare
      */
     public static void sortRistorantiNome(ArrayList<Ristoratori> ristoratori) {
         int n = ristoratori.size();
@@ -438,28 +438,26 @@ public class EatAdvisor {
     }
 
     /**
-     * Metodo statico che ritorna un array di ristoratori del comune
+     * Metodo statico che ritorna un arraylist di ristoratori del comune
      *
      * @param comune comune da cercare
-     * @return array Ristoratori contenente i ristoranti trovati
+     * @return arraylist Ristoratori contenente i ristoranti trovati
      */
     public static ArrayList<Ristoratori> ricercaComune(String comune) {
         String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array ristoratori da EatAdvisor.dati
+                // lettura arraylist ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
                 ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
-                // nel caso non lo sia, il ristorante viene tolto dall'array.
-                // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
-                // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
-                // al numero di elementi NON null, viene popolato da essi e ritornato
+                // arraylist ristoratori deserializzato
+                // per ogni ristorante nell'arraylist, controlla che il comune inserito sia uguale a quello del ristorante.
+                // nel caso lo sia, il ristorante viene aggiunto ad un altro arraylist.
+                // viene ritornato il secondo arraylist
                 ArrayList<Ristoratori> rok = new ArrayList<>();
                 for (int i = 0; i < ristoratori.size(); i++) {
                     if (ristoratori.get(i).getComune().equals(comune)) {
@@ -478,28 +476,26 @@ public class EatAdvisor {
     }
 
     /**
-     * Metodo statico che ritorna un array di ristoratori della tipologia
+     * Metodo statico che ritorna un arraylist di ristoratori della tipologia
      *
      * @param tipologia tipologia da cercare
-     * @return array Ristoratori contenente i ristoranti trovati
+     * @return arraylist Ristoratori contenente i ristoranti trovati
      */
     public static ArrayList<Ristoratori> ricercaTipologia(String tipologia) {
         String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array ristoratori da EatAdvisor.dati
+                // lettura arraylist ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
                 ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
-                // nel caso non lo sia, il ristorante viene tolto dall'array.
-                // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
-                // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
-                // al numero di elementi NON null, viene popolato da essi e ritornato
+                // arraylist ristoratori deserializzato
+                // per ogni ristorante nell'arraylist, controlla che la tipologia inserita sia uguale a quella del ristorante.
+                // nel caso lo sia, il ristorante viene aggiunto ad un altro arraylist.
+                // viene ritornato il secondo arraylist
                 ArrayList<Ristoratori> rok = new ArrayList<>();
                 for (int i = 0; i < ristoratori.size(); i++) {
                     if (ristoratori.get(i).getTipologia().equals(tipologia)) {
@@ -517,23 +513,27 @@ public class EatAdvisor {
         }
     }
 
+    /**
+     * Metodo statico che ritorna un arraylist di ristoratori il cui nome contiene nome
+     *
+     * @param nome nome da cercare
+     * @return arraylist Ristoratori contenente i ristoranti trovati
+     */
     public static ArrayList<Ristoratori> ricercaNome(String nome) {
         String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array ristoratori da EatAdvisor.dati
+                // lettura arraylist ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
                 ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
-                // nel caso non lo sia, il ristorante viene tolto dall'array.
-                // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
-                // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
-                // al numero di elementi NON null, viene popolato da essi e ritornato
+                // arraylist ristoratori deserializzato
+                // per ogni ristorante nell'arraylist, controlla che il nome inserito sia contenuto in quello del ristorante.
+                // nel caso lo sia, il ristorante viene aggiunto ad un altro arraylist.
+                // viene ritornato il secondo arraylist
                 ArrayList<Ristoratori> rok = new ArrayList<>();
                 for (int i = 0; i < ristoratori.size(); i++) {
                     if (ristoratori.get(i).getNome().toLowerCase().contains(nome.toLowerCase())) {
@@ -608,7 +608,9 @@ public class EatAdvisor {
             for (Giudizio giudizio : g) {
                 System.out.println("Autore: " + giudizio.getAutore());
                 System.out.println("Voto: " + giudizio.getVoto());
-                if (giudizio.getCommento() != null) System.out.println("Commento: " + giudizio.getCommento() + "\n\n");
+                if (giudizio.getCommento() != null) {
+                    System.out.println("Commento: " + giudizio.getCommento() + "\n");
+                }
                 System.out.println();
             }
         } else {
@@ -618,9 +620,9 @@ public class EatAdvisor {
 
     /**
      * Metodo statico che stampa a video un numero progressivo,
-     * i nomi e gli indirizzi dei ristoranti nell'array ristoratori specificato
+     * i nomi e gli indirizzi dei ristoranti nell'arraylist ristoratori specificato
      *
-     * @param ristoratori ristoranti dei quali visualizzare numero, nome e indirizzo
+     * @param ristoratori arraylist di ristoranti dei quali visualizzare numero, nome e indirizzo
      */
     public static void visualizzaRistoranti(ArrayList<Ristoratori> ristoratori) {
         if (ristoratori != null) {
@@ -642,10 +644,10 @@ public class EatAdvisor {
     }
 
     /**
-     * Metodo statico che riceve un array di ristoranti e un intero n > 0.
+     * Metodo statico che riceve un arraylist di ristoranti e un intero n > 0.
      * Ritorna il ristorante n-esimo
      *
-     * @param ristoratori array dal quale selezionare un ristorante
+     * @param ristoratori arraylist dal quale selezionare un ristorante
      * @param n           ristorante da selezionare
      * @return ristorante selezionato
      */
@@ -661,7 +663,7 @@ public class EatAdvisor {
     /**
      * Metodo statico che visualizza le informazioni del ristorante selezionato
      *
-     * @param r array dal quale selezionare un ristorante
+     * @param r ristorante del quale visualizzare le informazioni complete
      */
     public static void visualizzaInfoRistorante(Ristoratori r) {
         if (r != null) {
@@ -679,7 +681,7 @@ public class EatAdvisor {
     /**
      * Metodo statico che legge le informazioni dei clienti dal file Utenti.dati
      *
-     * @return array Clienti contenente i clienti letti
+     * @return arraylist Clienti contenente i clienti letti
      */
     public static ArrayList<Clienti> leggiClienti() {
         String filename = "data" + File.separator + "Utenti.dati";

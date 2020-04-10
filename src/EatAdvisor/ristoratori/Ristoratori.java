@@ -125,7 +125,7 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
      * Altrimenti crea un nuovo array di giudizi, aggiunge il giudizio "in testa", e poi aggiunge
      * i giudizi precedenti.
      *
-     * @param g array dal quale selezionare un ristorante
+     * @param g giudizio da aggiungere al ristorante invocante
      */
     public void addGiudizio(Giudizio g) {
         if (giudizi == null) {
@@ -162,7 +162,7 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
 
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array ristoratori da EatAdvisor.dati
+                // lettura arraylist ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
 
@@ -171,8 +171,8 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                 fileInput.close();
 
 
-                // se il nome del ristorante invocante e' gia inserito E l'indirizzo e' lo stesso,
-                // stampa un errore e interrompe l'esecuzione del metodo
+                // se il nome del ristorante invocante e' gia inserito e se l'indirizzo e' lo stesso
+                // stampa un errore e interrompe il ciclo
                 boolean ok = true;
                 for (Ristoratori r : ristoratori) {
                     if (r.getNome().equals(nome) && r.getTipoIndirizzo().equals(tipoIndirizzo) && r.getNomeIndirizzo().equals(nomeIndirizzo) &&
@@ -187,7 +187,6 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                     ristoratori.add(this);
                 }
 
-                // array ristoratori deserializzato
                 sortRistorantiNome(ristoratori);
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
@@ -236,7 +235,7 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array ristoratori da EatAdvisor.dati
+                // lettura arraylist ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
 
@@ -251,8 +250,6 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
                         ristoratori.set(i, this);
                     }
                 }
-
-                // array ristoratori deserializzato
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);

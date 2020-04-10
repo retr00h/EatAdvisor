@@ -35,11 +35,16 @@ public class Clienti extends EatAdvisor implements Serializable {
         this.password = password;
     }
 
-
+    /**
+     * @return nickname dell'utente
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * @return password dell'utente
+     */
     public String getPassword() {
         return password;
     }
@@ -48,7 +53,7 @@ public class Clienti extends EatAdvisor implements Serializable {
      * Controlla che il file Utenti.dati esista. Se esiste, legge gli utenti gia' salvati e controlla
      * che l'utente invocante non sia gia' presente.
      * Se non lo e' lo aggiunge agli utenti gia' presenti e li serializza.
-     * <p>
+     *
      * Se il file non esiste, serializza i dati dell'utente.
      */
     private void registraCliente() {
@@ -63,7 +68,7 @@ public class Clienti extends EatAdvisor implements Serializable {
 
         if (f.exists() && !f.isDirectory()) {
             try {
-                // lettura array utenti da utenti.dati
+                // lettura arraylist utenti da utenti.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
                 ArrayList<Clienti> utenti = (ArrayList<Clienti>) in.readObject();
@@ -85,7 +90,7 @@ public class Clienti extends EatAdvisor implements Serializable {
                     utenti.add(this);
                 }
 
-                // array utenti deserializzato
+                // arraylist utenti deserializzato
 
                 FileOutputStream fileOutput = new FileOutputStream(filename);
                 ObjectOutputStream out = new ObjectOutputStream(fileOutput);
@@ -236,7 +241,7 @@ public class Clienti extends EatAdvisor implements Serializable {
     private void giudica(Scanner input, Ristoratori r) {
         System.out.println("Inserisci un voto (min1,2,3,4,5max): ");
         int voto = Integer.parseInt(input(input, 19));
-        System.out.println("(Opzionale) inserisci un commento: ");
+        System.out.println("(Opzionale) inserisci un commento (max 256 caratteri): ");
         String commento = input(input, 20);
         r.addGiudizio(new Giudizio(this.nickname, voto, commento));
         r.aggiorna();
@@ -249,7 +254,6 @@ public class Clienti extends EatAdvisor implements Serializable {
      * EatAdvisor.ricercaComune(String comune)
      * EatAdvisor.ricercaTipologia(String tipologia)
      * EatAdvisor.ricercaNome(String nome)
-     * EatAdvisor.ricercaComuneTipologia(String comune, String tipologia)
      * EatAdvisor.visualizzaRistoranti(Ristoratori r)
      * EatAdvisor.selezionaRistorante(Ristoratori[] r, int n)
      * EatAdvisor.visualizzaInfoRistorante(Ristoratori r)
@@ -412,7 +416,7 @@ public class Clienti extends EatAdvisor implements Serializable {
                     c = new Clienti(nome, cognome, comune, provincia, email, nickname, password);
                     c.registraCliente();
                     // una volta registrato, l'utente rimane automaticamente autenticato per la durata dell'utilizzo
-//                    c.menuAutenticato(input);
+                    c.menuAutenticato(input);
                     break;
 
                 case 3:
