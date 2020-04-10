@@ -1,12 +1,15 @@
 // Fabio Cirelli, matricola 740482, sede Varese
 
 package EatAdvisor;
+
 import EatAdvisor.clienti.Clienti;
 import EatAdvisor.ristoratori.Ristoratori;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EatAdvisor {
@@ -71,17 +74,27 @@ public class EatAdvisor {
             case 4: return s.matches(regexNomeIndirizzo);
             case 5: return s.matches(regexCivico);
             case 6: return s.matches(regexComune);
-            case 7: return s.matches(regexProvincia);
-            case 8: return s.matches(regexCap);
-            case 9: return s.matches(regexTelefono);
-            case 10: return s.matches(regexUrl);
-            case 11: return s.matches(regexTipologiaRistorante);
+            case 7:
+                return s.matches(regexProvincia);
+            case 8:
+                return s.matches(regexCap);
+            case 9:
+                return s.matches(regexTelefono);
+            case 10:
+                return s.matches(regexUrl);
+            case 11:
+                return s.matches(regexTipologiaRistorante);
 
-            case 12: return s.matches(regexCognome);
-            case 13: return s.matches(regexEmail);
-            case 14: return s.matches(regexNickname);
-            case 15: return s.matches(regexPassword);
-            case 16: return s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3") || s.equals("4");
+            case 12:
+                return s.matches(regexCognome);
+            case 13:
+                return s.matches(regexEmail);
+            case 14:
+                return s.matches(regexNickname);
+            case 15:
+                return s.matches(regexPassword);
+            case 16:
+                return s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3");
             case 17:
                 try {
                     int i = Integer.parseInt(s);
@@ -411,14 +424,14 @@ public class EatAdvisor {
      *
      * @param ristoratori array da ordinare
      */
-    public static void sortRistorantiNome(Ristoratori[] ristoratori) {
-        int n = ristoratori.length;
+    public static void sortRistorantiNome(ArrayList<Ristoratori> ristoratori) {
+        int n = ristoratori.size();
         for (int i = 0; i < n; i++) {
             for (int j = n - 1; j > i; j--) {
-                if (ristoratori[j].getNome().compareToIgnoreCase(ristoratori[j - 1].getNome()) < 0) {
-                    Ristoratori temp = ristoratori[j];
-                    ristoratori[j] = ristoratori[j - 1];
-                    ristoratori[j - 1] = temp;
+                if (ristoratori.get(j).getNome().compareToIgnoreCase(ristoratori.get(j - 1).getNome()) < 0) {
+                    Ristoratori temp = ristoratori.get(j);
+                    ristoratori.set(j, ristoratori.get(j - 1));
+                    ristoratori.set(j - 1, temp);
                 }
             }
         }
@@ -430,40 +443,32 @@ public class EatAdvisor {
      * @param comune comune da cercare
      * @return array Ristoratori contenente i ristoranti trovati
      */
-    public static Ristoratori[] ricercaComune(String comune) {
-        String filename = "data/EatAdvisor.dati";
+    public static ArrayList<Ristoratori> ricercaComune(String comune) {
+        String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
                 // lettura array ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
-                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                int elementiNull = 0;
                 // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che il comune inserito sia uguale a quello del ristorante.
+                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
                 // nel caso non lo sia, il ristorante viene tolto dall'array.
                 // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
                 // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
                 // al numero di elementi NON null, viene popolato da essi e ritornato
-                for (int i = 0; i < ristoratori.length; i++) {
-                    if (!ristoratori[i].getComune().toLowerCase().equals(comune.toLowerCase())) {
-                        ristoratori[i] = null;
-                        elementiNull++;
+                ArrayList<Ristoratori> rok = new ArrayList<>();
+                for (int i = 0; i < ristoratori.size(); i++) {
+                    if (ristoratori.get(i).getComune().equals(comune)) {
+                        rok.add(ristoratori.get(i));
                     }
                 }
-                if (elementiNull == ristoratori.length) {
-                    return null;
-                } else {
-                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
-                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
-                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
-                    }
-                    return ristoratoriOk;
-                }
-            } catch (Exception e) {
+
+                return rok;
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
                 return null;
             }
@@ -478,40 +483,32 @@ public class EatAdvisor {
      * @param tipologia tipologia da cercare
      * @return array Ristoratori contenente i ristoranti trovati
      */
-    public static Ristoratori[] ricercaTipologia(String tipologia) {
-        String filename = "data/EatAdvisor.dati";
+    public static ArrayList<Ristoratori> ricercaTipologia(String tipologia) {
+        String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
                 // lettura array ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
-                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                int elementiNull = 0;
                 // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che la tipologia inserita sia uguale a quella del ristorante.
+                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
                 // nel caso non lo sia, il ristorante viene tolto dall'array.
                 // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
                 // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
                 // al numero di elementi NON null, viene popolato da essi e ritornato
-                for (int i = 0; i < ristoratori.length; i++) {
-                    if (!ristoratori[i].getTipologia().equals(tipologia)) {
-                        ristoratori[i] = null;
-                        elementiNull++;
+                ArrayList<Ristoratori> rok = new ArrayList<>();
+                for (int i = 0; i < ristoratori.size(); i++) {
+                    if (ristoratori.get(i).getTipologia().equals(tipologia)) {
+                        rok.add(ristoratori.get(i));
                     }
                 }
-                if (elementiNull == ristoratori.length) {
-                    return null;
-                } else {
-                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
-                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
-                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
-                    }
-                    return ristoratoriOk;
-                }
-            } catch (Exception e) {
+
+                return rok;
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
                 return null;
             }
@@ -520,91 +517,38 @@ public class EatAdvisor {
         }
     }
 
-    /**
-     * Metodo statico che ritorna un array di ristoratori il cui nome CONTIENE nome
-     *
-     * @param nome nome da cercare
-     * @return array Ristoratori contenente i ristoranti trovati
-     */
-    public static Ristoratori[] ricercaNome(String nome) {
-        String filename = "data/EatAdvisor.dati";
+    public static ArrayList<Ristoratori> ricercaNome(String nome) {
+        String filename = "data" + File.separator + "EatAdvisor.dati";
         File f = new File(filename);
         if (f.exists() && !f.isDirectory()) {
             try {
                 // lettura array ristoratori da EatAdvisor.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
-                Ristoratori[] ristoratori = (Ristoratori[]) in.readObject();
+                ArrayList<Ristoratori> ristoratori = (ArrayList<Ristoratori>) in.readObject();
                 in.close();
                 fileInput.close();
-                int elementiNull = 0;
                 // array ristoratori deserializzato
-                // per ogni ristorante nell'array, controlla che il nome inserito sia contenuto in quello del ristorante.
+                // per ogni ristorante nell'array, controlla che la tipologia inserito sia uguale a quella del ristorante.
                 // nel caso non lo sia, il ristorante viene tolto dall'array.
                 // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
                 // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
                 // al numero di elementi NON null, viene popolato da essi e ritornato
-                for (int i = 0; i < ristoratori.length; i++) {
-                    if (!ristoratori[i].getNome().toLowerCase().matches(nome.toLowerCase())) {
-                        ristoratori[i] = null;
-                        elementiNull++;
+                ArrayList<Ristoratori> rok = new ArrayList<>();
+                for (int i = 0; i < ristoratori.size(); i++) {
+                    if (ristoratori.get(i).getNome().toLowerCase().contains(nome.toLowerCase())) {
+                        rok.add(ristoratori.get(i));
                     }
                 }
-                if (elementiNull == ristoratori.length) {
-                    return null;
-                } else {
-                    Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
-                    for (int i = 0; i < ristoratori.length - elementiNull; i++) {
-                        if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
-                    }
-                    return ristoratoriOk;
-                }
-            } catch (Exception e) {
+
+                return rok;
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("\nQualcosa e' andato storto e non e' stato possibile leggere i dati dei ristoranti.\n");
                 return null;
             }
         } else {
             return null;
         }
-    }
-
-    /**
-     * Metodo statico che ritorna un array di ristoratori di tipologia tipologia presenti nel comune comune
-     *
-     * @param comune    comune da cercare
-     * @param tipologia tipologia da cercare
-     * @return array Ristoratori contenente i ristoranti trovati
-     */
-    public static Ristoratori[] ricercaComuneTipologia(String comune, String tipologia) {
-        // viene effettuata una ricerca per comune (vedere il metodo ricercaComune),
-        // per ogni ristorante nell'array, controlla che la tipologia inserita sia uguale a quella del ristorante.
-        // nel caso non lo sia, il ristorante viene tolto dall'array.
-        // se il numero di elementi null (ovvero rimossi) e' uguale al numero di elementi dell'array,
-        // viene ritornato un array null, altrimenti, viene creato un nuovo array di dimensione corrispondente
-        // al numero di elementi NON null, viene popolato da essi e ritornato
-        Ristoratori[] ristoratori = ricercaComune(comune);
-        int elementiNull = 0;
-        if (ristoratori != null) {
-            for (int i = 0; i < ristoratori.length; i++) {
-                if (ristoratori[i] == null) {
-                    elementiNull++;
-                } else {
-                    if (!ristoratori[i].getTipologia().toLowerCase().equals(tipologia.toLowerCase())) {
-                        ristoratori[i] = null;
-                        elementiNull++;
-                    }
-                }
-            }
-            if (elementiNull == ristoratori.length) {
-                return null;
-            } else {
-                Ristoratori[] ristoratoriOk = new Ristoratori[ristoratori.length - elementiNull];
-                for (int i = 0; i < ristoratori.length - elementiNull; i++) {
-                    if (ristoratori[i] != null) ristoratoriOk[i] = ristoratori[i];
-                }
-                return ristoratoriOk;
-            }
-        } else return null;
     }
 
     /**
@@ -678,17 +622,21 @@ public class EatAdvisor {
      *
      * @param ristoratori ristoranti dei quali visualizzare numero, nome e indirizzo
      */
-    public static void visualizzaRistoranti(Ristoratori[] ristoratori) {
+    public static void visualizzaRistoranti(ArrayList<Ristoratori> ristoratori) {
         if (ristoratori != null) {
-            for (int i = 0; i < ristoratori.length; i++) {
-                String indirizzo = capitalize(ristoratori[i].getTipoIndirizzo()) + " " +
-                        capitalize(ristoratori[i].getNomeIndirizzo()) + ", #" +
-                        ristoratori[i].getCivico() + ", " + capitalize(ristoratori[i].getComune()) + ", " +
-                        ristoratori[i].getProvincia() + " " + ristoratori[i].getCap();
-                System.out.println("Ristorante " + (i + 1));
-                System.out.println("Nome: " + ristoratori[i].getNome());
-                System.out.println("Indirizzo: " + indirizzo);
-                System.out.println();
+            int i = 1;
+            for (Ristoratori r : ristoratori) {
+                if (r != null) {
+                    String indirizzo = capitalize(r.getTipoIndirizzo()) + " " +
+                            capitalize(r.getNomeIndirizzo()) + ", #" +
+                            r.getCivico() + ", " + capitalize(r.getComune()) + ", " +
+                            r.getProvincia() + " " + r.getCap();
+                    System.out.println("Ristorante " + (i));
+                    System.out.println("Nome: " + r.getNome());
+                    System.out.println("Indirizzo: " + indirizzo);
+                    System.out.println();
+                }
+                i++;
             }
         }
     }
@@ -701,10 +649,10 @@ public class EatAdvisor {
      * @param n           ristorante da selezionare
      * @return ristorante selezionato
      */
-    public static Ristoratori selezionaRistorante(Ristoratori[] ristoratori, int n) {
+    public static Ristoratori selezionaRistorante(ArrayList<Ristoratori> ristoratori, int n) {
         n--;
-        if (n >= 0 && n < ristoratori.length) {
-            return ristoratori[n];
+        if (n >= 0 && n < ristoratori.size()) {
+            return ristoratori.get(n);
         } else {
             return null;
         }
@@ -733,22 +681,20 @@ public class EatAdvisor {
      *
      * @return array Clienti contenente i clienti letti
      */
-    public static Clienti[] leggiClienti() {
-        String filename = "data/Utenti.dati";
+    public static ArrayList<Clienti> leggiClienti() {
+        String filename = "data" + File.separator + "Utenti.dati";
         File f = new File(filename);
-        Clienti[] utenti = null;
+        ArrayList<Clienti> utenti = null;
         if (f.exists() && !f.isDirectory()) {
             try {
                 // lettura array utenti da utenti.dati
                 FileInputStream fileInput = new FileInputStream(filename);
                 ObjectInputStream in = new ObjectInputStream(fileInput);
-
-                utenti = (Clienti[]) in.readObject();
-
+                utenti = (ArrayList<Clienti>) in.readObject();
                 in.close();
                 fileInput.close();
                 return utenti;
-            } catch (Exception e) {
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Qualcosa e' andato storto e non e' stato possibile leggere i dati degli utenti.");
             }
         } else {
