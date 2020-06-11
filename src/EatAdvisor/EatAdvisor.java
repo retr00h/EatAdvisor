@@ -12,6 +12,12 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * @author Fabio Cirelli
+ * Classe "di servizio" usata dalle altre classi del package.
+ * Fornisce metodi di validazione dell'input, ricerca dei ristoranti, visualizzazione di informazioni di essi,
+ * ed un metodo per leggere i clienti dal file Utenti.data.
+ */
 public class EatAdvisor {
 
     /**
@@ -644,7 +650,7 @@ public class EatAdvisor {
     }
 
     /**
-     * Metodo statico che riceve un arraylist di ristoranti e un intero n > 0.
+     * Metodo statico che riceve un arraylist di ristoranti e un intero n maggiore di 0.
      * Ritorna il ristorante n-esimo
      *
      * @param ristoratori arraylist dal quale selezionare un ristorante

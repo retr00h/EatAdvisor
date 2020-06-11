@@ -2,6 +2,10 @@
 
 package EatAdvisor;
 
+/**
+ * @author Fabio Cirelli
+ * Classe che permette di creare Giudizi relativi ai singoli ristoranti. *
+ */
 public class Giudizio extends EatAdvisor implements java.io.Serializable {
     private String autore;
     private int voto;
@@ -9,7 +13,10 @@ public class Giudizio extends EatAdvisor implements java.io.Serializable {
 
     /**
      * Costruttore.
-     * Costruisce l'oggetto Giudizio specificando autore e voto.
+     * Costruisce l'oggetto Giudizio specificando
+     *
+     * @param autore
+     * @param voto
      */
     public Giudizio(String autore, int voto) {
         this.autore = autore;
@@ -18,7 +25,10 @@ public class Giudizio extends EatAdvisor implements java.io.Serializable {
 
     /**
      * Costruttore.
-     * Costruisce l'oggetto Giudizio specificando autore, voto e commento.
+     * Costruisce l'oggetto Giudizio specificando
+     * @param autore
+     * @param voto
+     * @param commento
      */
     public Giudizio(String autore, int voto, String commento) {
         this.autore = autore;

@@ -9,6 +9,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * @author Fabio Cirelli
+ * Classe che permette di creare oggetti Ristoratori, e di registrarli sul file EatAdvisor.data.
+ * Permette inoltre di aggiornare tale file, e di aggiungere giudizi ai singoli ristoranti.
+ */
 public class Ristoratori extends EatAdvisor implements java.io.Serializable {
 
     private String nome;
@@ -25,8 +30,17 @@ public class Ristoratori extends EatAdvisor implements java.io.Serializable {
 
     /**
      * Costruttore.
-     * Costruisce l'oggetto Ristoratori specificando nome, tipoIndirizzo, nomeIndirizzo, civico, comune,
-     * provincia, cap, telefono, url, tipologia
+     * Costruisce l'oggetto Ristoratori specificando
+     * @param nome
+     * @param tipoIndirizzo
+     * @param nomeIndirizzo
+     * @param civico
+     * @param comune
+     * @param provincia
+     * @param cap
+     * @param telefono
+     * @param url
+     * @param tipologia
      */
     public Ristoratori(String nome, String tipoIndirizzo, String nomeIndirizzo, String civico, String comune,
                        String provincia, String cap, String telefono, String url, String tipologia) {

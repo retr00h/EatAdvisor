@@ -10,6 +10,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * @author Fabio Cirelli
+ * Classe che permette di creare oggetti Clienti, e di registrarli sul file Utenti.data.
+ * Contiene metodi per visualizzare il menu per diverse categorie di utenti (registrati, non registrati),
+ * e metodi per aggiungere giudizi al Ristorante selezionato.
+ */
 public class Clienti extends EatAdvisor implements Serializable {
 
     private String nome;
@@ -22,8 +28,14 @@ public class Clienti extends EatAdvisor implements Serializable {
 
     /**
      * Costruttore.
-     * Costruisce l'oggetto Clienti specificando nome, cognome, comune,
-     * provincia, email, nickname e password
+     * Costruisce l'oggetto Clienti specificando
+     * @param nome
+     * @param cognome
+     * @param comune
+     * @param provincia
+     * @param email
+     * @param nickname
+     * @param password
      */
     public Clienti(String nome, String cognome, String comune, String provincia, String email, String nickname, String password) {
         this.nome = nome;
@@ -135,8 +147,8 @@ public class Clienti extends EatAdvisor implements Serializable {
      * EatAdvisor.ricercaComune(String comune)
      * EatAdvisor.ricercaTipologia(String tipologia)
      * EatAdvisor.ricercaNome(String nome)
-     * EatAdvisor.visualizzaRistoranti(ArrayList<Ristoratori> r)
-     * EatAdvisor.selezionaRistorante(ArrayList<Ristoratori> r, int n)
+     * EatAdvisor.visualizzaRistoranti(ArrayList r)
+     * EatAdvisor.selezionaRistorante(ArrayList r, int n)
      * EatAdvisor.visualizzaInfoRistorante(Ristoratori r)
      *
      * @param input scanner da utilizzare per ottenere dati dall'utente
